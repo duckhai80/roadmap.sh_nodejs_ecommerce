@@ -1,6 +1,7 @@
+import { config } from "@/configs/mongodb.config";
 import mongoose, { Connection, MongooseError } from "mongoose";
 
-const connectString = "mongodb://localhost:27017/mydatabase";
+const connectString = `mongodb://${config?.db.host}:${config?.db.port}/${config?.db.name}`;
 const _MAX_POOL_SIZE = 50;
 
 class MongoDB {

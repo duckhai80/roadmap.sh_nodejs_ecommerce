@@ -2,8 +2,11 @@ import compression from "compression";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import dotenv from "dotenv";
 
 const app = express();
+
+dotenv.config();
 
 // Init middleware
 app.use(morgan("dev"));
