@@ -1,4 +1,6 @@
 import { app } from "@/app";
+import { mongoDbInstance } from "@/database/init.mongodb.scalable";
+import { checkConnection, checkOverload } from "@/helpers/check.connection";
 
 const PORT = 3055;
 
@@ -11,3 +13,10 @@ process.on("SIGINT", () => {
     console.log("Exit web server");
   });
 });
+
+(async function () {
+  await mongoDbInstance.connect();
+
+  checkConnection();
+  checkOverload();
+})();

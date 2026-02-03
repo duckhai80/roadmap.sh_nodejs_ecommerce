@@ -1,7 +1,7 @@
+import compression from "compression";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import compression from "compression";
 
 const app = express();
 
@@ -9,8 +9,6 @@ const app = express();
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(compression());
-
-// Init database
 
 // Define routes
 app.get("/", (req, res, next) => {

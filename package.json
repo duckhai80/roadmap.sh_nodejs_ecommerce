@@ -2,10 +2,10 @@
   "name": "nodejs-ecommerce",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsx watch server.ts",
+    "start": "tsx watch src/server.ts",
     "build": "tsc && tsc-alias"
   },
   "keywords": [],
@@ -16,6 +16,7 @@
     "compression": "^1.8.1",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
+    "mongoose": "^9.1.5",
     "tsc-alias": "^1.8.16"
   },
   "devDependencies": {
