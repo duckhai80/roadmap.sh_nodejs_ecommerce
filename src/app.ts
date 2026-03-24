@@ -3,23 +3,28 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import router from "@/routes";
+import createHttpError from "http-errors";
 
 const app = express();
 
 dotenv.config();
 
 // Init middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(compression());
 
 // Define routes
-app.get("/", (req, res, next) => {
-  const strCompress = "Hello World!".repeat(1000);
-
-  return res.status(200).json({
-    message: "API is working!",
-    metadata: strCompress,
+app.use("/", router);
+app.use((req, res, next) => {
+  next(createHttpError.NotFound("This route does not exist."));
+});
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({
+    error: err.message || "Internal Server Error",
   });
 });
 

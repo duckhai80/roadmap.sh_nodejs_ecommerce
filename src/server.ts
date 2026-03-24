@@ -1,6 +1,7 @@
 import { app } from "@/app";
 import { mongoDbInstance } from "@/database/init.mongodb.scalable";
-import { checkConnection, checkOverload } from "@/helpers/check.connection";
+import { checkConnection, checkOverload } from "@/helpers";
+import redisClient from "@/configs/redis.config";
 
 const PORT = process.env.PORT || 3056;
 
@@ -17,6 +18,8 @@ process.on("SIGINT", () => {
 (async function () {
   await mongoDbInstance.connect();
 
-  checkConnection();
-  checkOverload();
+  // checkConnection();
+  // checkOverload();
 })();
+
+redisClient.connect();
