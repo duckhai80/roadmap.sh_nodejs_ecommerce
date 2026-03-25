@@ -1,3 +1,4 @@
+import { BadRequestError } from "@/core";
 import { shopModel } from "@/models";
 import { createTokenPair, getInfoData } from "@/utils";
 import bcrypt from "bcrypt";
@@ -5,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import KeyTokenService from "./keyToken.service";
-import { BadRequestError } from "@/core";
+import ShopService from "./shop.service";
 
 const RoleShop = {
   SHOP: "SHOP",
@@ -27,6 +28,54 @@ const publicKey = fs.readFileSync(
 );
 
 class AccessService {
+  login = async ({
+    email,
+    password,
+    refreshToken,
+  }: {
+    email: string;
+    password: string;
+    refreshToken: string;
+  }) => {
+    // Check email exists
+    const foundShop = await ShopService.findOneByEmail(email);
+
+    if (!foundShop) {
+      throw new BadRequestError("Shop not registered!");
+    }
+
+    // Check password
+    const match = await bcrypt.compare(password, foundShop.password);
+
+    if (!match) {
+      throw new BadRequestError("Invalid credentials!");
+    }
+
+    // Create token pair
+    const tokens = await createTokenPair(
+      { shopId: foundShop._id, email },
+      privateKey,
+      publicKey,
+    );
+
+    // Save token
+    await KeyTokenService.createKeyToken({
+      shopId: foundShop._id.toString(),
+      privateKey,
+      publicKey,
+      refreshToken: tokens?.refreshToken,
+    });
+
+    // Get data
+    return {
+      shop: getInfoData({
+        object: foundShop,
+        fields: ["_id", "email"],
+      }),
+      tokens,
+    };
+  };
+
   signUp = async ({
     name,
     email,
@@ -55,7 +104,7 @@ class AccessService {
       // const publicKey = crypto.randomBytes(64).toString("hex");
 
       const tokenKeys = await KeyTokenService.createKeyToken({
-        userId: newShop._id.toString(),
+        shopId: newShop._id.toString(),
         privateKey,
         publicKey,
       });
@@ -66,7 +115,7 @@ class AccessService {
 
       // Create token pair
       const tokens = await createTokenPair(
-        { userId: newShop._id, email },
+        { shopId: newShop._id, email },
         privateKey,
         publicKey,
       );

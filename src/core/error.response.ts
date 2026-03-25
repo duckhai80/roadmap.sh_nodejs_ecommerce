@@ -15,7 +15,7 @@ export class ErrorResponse extends Error {
 export class ConfigRequestError extends ErrorResponse {
   constructor(
     message: string = ReasonPhrase.CONFLICT,
-    status: number = StatusCode.FORBIDDEN,
+    status: number = StatusCode.CONFLICT,
   ) {
     super(message, status);
   }

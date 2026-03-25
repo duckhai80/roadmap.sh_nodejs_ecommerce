@@ -5,7 +5,7 @@ const COLLECTION_NAME = "keytokens";
 
 const keyTokenSchema = new mongoose.Schema(
   {
-    user: {
+    shop: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "Shop",
@@ -18,9 +18,14 @@ const keyTokenSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    refreshToken: {
+    // Array of refresh tokens that have bene used
+    refreshTokensUsed: {
       type: Array,
       default: [],
+    },
+    refreshToken: {
+      type: String,
+      required: true,
     },
   },
   {
