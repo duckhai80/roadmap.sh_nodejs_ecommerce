@@ -72,14 +72,11 @@ class AccessService {
       );
 
       return {
-        code: 201,
-        metadata: {
-          shop: getInfoData({
-            object: newShop,
-            fields: ["_id", "email", "name"],
-          }),
-          tokens,
-        },
+        shop: getInfoData({
+          object: newShop,
+          fields: ["_id", "email", "name"],
+        }),
+        tokens,
       };
     }
 
