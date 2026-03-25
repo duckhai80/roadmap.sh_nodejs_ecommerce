@@ -19,15 +19,19 @@ app.use(compression());
 
 // Define routes
 app.use("/", router);
+
+// Handling errors
 app.use((req, res, next) => {
   next(createHttpError.NotFound("This route does not exist."));
 });
-app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({
-    error: err.message || "Internal Server Error",
+app.use((error, req, res, next) => {
+  const statusCode = error.status || 500;
+
+  return res.status(statusCode).json({
+    status: "error",
+    code: statusCode,
+    message: error.message || "Internal Server Error",
   });
 });
-
-// Handling errors
 
 export { app };

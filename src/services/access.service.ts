@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import KeyTokenService from "./keyToken.service";
+import { BadRequestError } from "@/core";
 
 const RoleShop = {
   SHOP: "SHOP",
@@ -35,73 +36,57 @@ class AccessService {
     email: string;
     password: string;
   }) => {
-    try {
-      const holder = await shopModel.findOne({ email: email }).lean();
+    const holder = await shopModel.findOne({ email: email }).lean();
 
-      if (holder) {
-        return {
-          code: "xxx",
-          message: "Shop already registered!",
-        };
-      }
+    if (holder) {
+      throw new BadRequestError("Shop already registered!");
+    }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newShop = await shopModel.create({
-        name,
-        email,
-        password: hashedPassword,
-        roles: [RoleShop.SHOP],
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newShop = await shopModel.create({
+      name,
+      email,
+      password: hashedPassword,
+      roles: [RoleShop.SHOP],
+    });
+
+    if (newShop) {
+      // const privateKey = crypto.randomBytes(64).toString("hex");
+      // const publicKey = crypto.randomBytes(64).toString("hex");
+
+      const tokenKeys = await KeyTokenService.createKeyToken({
+        userId: newShop._id.toString(),
+        privateKey,
+        publicKey,
       });
 
-      if (newShop) {
-        // const privateKey = crypto.randomBytes(64).toString("hex");
-        // const publicKey = crypto.randomBytes(64).toString("hex");
-
-        const tokenKeys = await KeyTokenService.createKeyToken({
-          userId: newShop._id.toString(),
-          privateKey,
-          publicKey,
-        });
-
-        if (!tokenKeys) {
-          return {
-            code: "xxx",
-            message: "Public key string errors!",
-          };
-        }
-
-        // Create token pair
-        const tokens = await createTokenPair(
-          { userId: newShop._id, email },
-          privateKey,
-          publicKey,
-        );
-
-        return {
-          code: 201,
-          metadata: {
-            shop: getInfoData({
-              object: newShop,
-              fields: ["_id", "email", "name"],
-            }),
-            tokens,
-          },
-        };
+      if (!tokenKeys) {
+        throw new BadRequestError("Public key string errors!");
       }
 
-      return {
-        code: 200,
-        metadata: null,
-      };
-    } catch (error: unknown) {
-      const err = error as Error;
+      // Create token pair
+      const tokens = await createTokenPair(
+        { userId: newShop._id, email },
+        privateKey,
+        publicKey,
+      );
 
       return {
-        code: "xxx",
-        message: err.message,
-        status: "error",
+        code: 201,
+        metadata: {
+          shop: getInfoData({
+            object: newShop,
+            fields: ["_id", "email", "name"],
+          }),
+          tokens,
+        },
       };
     }
+
+    return {
+      code: 200,
+      metadata: null,
+    };
   };
 }
 
