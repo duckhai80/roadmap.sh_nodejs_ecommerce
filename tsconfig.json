@@ -16,6 +16,9 @@
     "esModuleInterop": true,
     "lib": ["ESNext"],
 
+    // Type Checking
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
+
     // Outputs
     "sourceMap": true,
     "declaration": true,

@@ -1,8 +1,15 @@
-import express from "express";
+import { checkApiKey, checkPermission } from "@/middlewares";
 import accessRoute from "@/routes/access";
+import express from "express";
 import jwtRouter from "./jwtRoute";
 
 const router = express.Router();
+
+// Check api key
+router.use(checkApiKey);
+
+// Check permission
+router.use(checkPermission("0000"));
 
 router.get("/", (req, res, next) => {
   return res.status(200).json({
