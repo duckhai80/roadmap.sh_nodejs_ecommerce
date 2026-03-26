@@ -8,7 +8,11 @@ class AccessController {
   handleRefreshToken = async (req: Request, res: Response) => {
     return new OK({
       message: "Refresh token success!",
-      metadata: await AccessService.handleRefreshToken(req.body.refreshToken),
+      metadata: await AccessService.handleRefreshToken(
+        req.keyStore!,
+        req.shop,
+        req.body.refreshToken,
+      ),
     }).send(res);
   };
 

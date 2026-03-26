@@ -2,7 +2,7 @@ import { keyStoreModel } from "@/models";
 import { Types } from "mongoose";
 
 class KeyStoreService {
-  static createKeyToken = async ({
+  static createKeyStore = async ({
     shopId,
     privateKey,
     publicKey,
@@ -54,6 +54,19 @@ class KeyStoreService {
     return await keyStoreModel
       .findOne({ refreshTokensUsed: refreshToken })
       .lean();
+  };
+
+  static updateRefreshToken = async (
+    refreshToken: string,
+    newRefreshToken: string,
+  ) => {
+    return await keyStoreModel.updateOne(
+      { refreshToken },
+      {
+        $set: { refreshToken: newRefreshToken },
+        $addToSet: { refreshTokensUsed: refreshToken },
+      },
+    );
   };
 
   static deleteById = async (keyStoreId: Types.ObjectId) => {

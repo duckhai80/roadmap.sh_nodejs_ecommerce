@@ -1,10 +1,11 @@
-import compression from "compression";
-import express from "express";
-import helmet from "helmet";
-import morgan from "morgan";
-import dotenv from "dotenv";
 import router from "@/routes";
+import compression from "compression";
+import dotenv from "dotenv";
+import express, { NextFunction, Request, Response } from "express";
+import helmet from "helmet";
 import createHttpError from "http-errors";
+import morgan from "morgan";
+import { ErrorResponse } from "./core";
 
 const app = express();
 
@@ -24,14 +25,18 @@ app.use("/", router);
 app.use((req, res, next) => {
   next(createHttpError.NotFound("This route does not exist."));
 });
-app.use((error, req, res, next) => {
-  const statusCode = error.status || 500;
+app.use(
+  (error: ErrorResponse, req: Request, res: Response, next: NextFunction) => {
+    const statusCode = error.status || 500;
 
-  return res.status(statusCode).json({
-    status: "error",
-    code: statusCode,
-    message: error.message || "Internal Server Error",
-  });
-});
+    return res.status(statusCode).json({
+      status: "error",
+      code: statusCode,
+      // In production, we should not return the stack trace
+      stack: error.stack,
+      message: error.message || "Internal Server Error",
+    });
+  },
+);
 
 export { app };

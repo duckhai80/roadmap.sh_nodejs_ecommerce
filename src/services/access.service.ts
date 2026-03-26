@@ -1,14 +1,13 @@
-import { AuthFailureError, BadRequestError } from "@/core";
+import { AuthFailureError, BadRequestError, ForbiddenError } from "@/core";
 import { shopModel } from "@/models";
 import { KeyStore } from "@/models/keyStore.model";
-import { createTokenPair, getInfoData, JWTPayload, verifyToken } from "@/utils";
+import { createTokenPair, getInfoData, JWTAuthPayload } from "@/utils";
 import bcrypt from "bcrypt";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import KeyTokenService from "./keyStore.service";
-import ShopService from "./shop.service";
 import KeyStoreService from "./keyStore.service";
+import ShopService from "./shop.service";
 
 const RoleShop = {
   SHOP: "SHOP",
@@ -30,34 +29,21 @@ const publicKey = fs.readFileSync(
 );
 
 class AccessService {
-  handleRefreshToken = async (refreshToken: string) => {
-    // Check refresh token that have been used
-    const foundedKeyStore =
-      await KeyStoreService.findByRefreshTokenUsed(refreshToken);
+  handleRefreshToken = async (
+    keyStore: KeyStore,
+    shop: JWTAuthPayload,
+    refreshToken: string,
+  ) => {
+    const { shopId, email } = shop;
 
-    // Handle for found key store used
-    if (foundedKeyStore) {
-      const { shopId, email } = (await verifyToken(
-        refreshToken,
-        foundedKeyStore.publicKey,
-      )) as JWTPayload;
-
-      console.log(`🚀 ~ AccessService ~ { shopId, email}:`, { shopId, email });
-
+    if (keyStore.refreshTokensUsed.includes(refreshToken)) {
       await KeyStoreService.deleteByShopID(shopId);
-      throw new BadRequestError("This refresh token has been used!");
+      throw new ForbiddenError("Something went wrong! Please login again!");
     }
 
-    // Handle for not found key store in used
-    const holderKeyStore =
-      await KeyStoreService.findByRefreshToken(refreshToken);
-
-    if (!holderKeyStore) throw new AuthFailureError("Shop not registered");
-
-    const { shopId, email } = (await verifyToken(
-      refreshToken,
-      holderKeyStore.publicKey,
-    )) as JWTPayload;
+    if (keyStore.refreshToken !== refreshToken) {
+      throw new AuthFailureError("Invalid refresh token!");
+    }
 
     const foundShop = await ShopService.findOneByEmail(email);
 
@@ -66,31 +52,27 @@ class AccessService {
     // Generate token pair
     const tokens = await createTokenPair(
       { shopId, email },
-      holderKeyStore.privateKey,
-      holderKeyStore.publicKey,
+      keyStore.privateKey,
+      keyStore.publicKey,
     );
 
     // Update key store
-    await holderKeyStore.updateOne({
-      $set: {
-        refreshToken: tokens?.refreshToken,
-      },
-      $addToSet: {
-        refreshTokensUsed: refreshToken,
-      },
-    });
+    await KeyStoreService.updateRefreshToken(
+      refreshToken,
+      tokens?.refreshToken!,
+    );
 
-    return { shop: { shopId, email }, tokens };
+    return { shop, tokens };
   };
 
   login = async ({
     email,
     password,
-    refreshToken,
+    refreshToken = null,
   }: {
     email: string;
     password: string;
-    refreshToken: string;
+    refreshToken?: string | null;
   }) => {
     // Check email exists
     const foundShop = await ShopService.findOneByEmail(email);
@@ -114,7 +96,7 @@ class AccessService {
     );
 
     // Save token
-    await KeyTokenService.createKeyToken({
+    await KeyStoreService.createKeyStore({
       shopId: foundShop._id.toString(),
       privateKey,
       publicKey,
@@ -158,7 +140,7 @@ class AccessService {
       // const privateKey = crypto.randomBytes(64).toString("hex");
       // const publicKey = crypto.randomBytes(64).toString("hex");
 
-      const tokenKeys = await KeyTokenService.createKeyToken({
+      const tokenKeys = await KeyStoreService.createKeyStore({
         shopId: newShop._id.toString(),
         privateKey,
         publicKey,
@@ -191,7 +173,7 @@ class AccessService {
   };
 
   logout = async (keyStore: KeyStore) => {
-    return await KeyTokenService.deleteById(keyStore._id);
+    return await KeyStoreService.deleteById(keyStore._id);
   };
 }
 

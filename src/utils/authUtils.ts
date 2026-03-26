@@ -1,12 +1,12 @@
 import JWT from "jsonwebtoken";
 
-export interface JWTPayload {
+export interface JWTAuthPayload {
   shopId: string;
   email: string;
 }
 
 export const createTokenPair = async (
-  payload: JWTPayload,
+  payload: JWTAuthPayload,
   privateKey: string,
   publicKey: string,
 ) => {

@@ -1,7 +1,7 @@
 import { HEADER } from "@/constants";
 import { AuthFailureError, NotFoundError } from "@/core";
 import { KeyStoreService } from "@/services";
-import { JWTPayload, verifyToken } from "@/utils";
+import { JWTAuthPayload, verifyToken } from "@/utils";
 import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "./catchAsync.middleware";
 
@@ -17,28 +17,43 @@ export const checkAuthentication = catchAsync(
 
     if (!keyStore) throw new NotFoundError("Not found key token");
 
-    // Get access token
+    /* Check case refresh token and pass throw authentication */
+    const refreshToken = req.headers[HEADER.REFRESH_TOKEN] as string;
+
+    if (refreshToken) {
+      // Verify refresh token
+      const decodedToken = (await verifyToken(
+        refreshToken,
+        keyStore.publicKey,
+      )) as JWTAuthPayload;
+
+      if (shopId !== decodedToken.shopId)
+        throw new AuthFailureError("ShopId not match");
+
+      req.keyStore = keyStore;
+      req.shop = decodedToken;
+
+      return next();
+    }
+
+    /* Check case access token if does not have refresh token */
     const accessToken = (req.headers[HEADER.AUTHORIZATION] as string).split(
       " ",
     )[1];
 
     if (!accessToken) throw new AuthFailureError("Invalid request");
 
-    // Verify token
-    try {
-      const decodedToken = (await verifyToken(
-        accessToken,
-        keyStore.publicKey,
-      )) as JWTPayload;
+    // Verify access token
+    const decodedToken = (await verifyToken(
+      accessToken,
+      keyStore.publicKey,
+    )) as JWTAuthPayload;
 
-      if (shopId !== decodedToken.shopId)
-        throw new AuthFailureError("ShopId not match");
+    if (shopId !== decodedToken.shopId)
+      throw new AuthFailureError("ShopId not match");
 
-      req.keyStore = keyStore;
+    req.keyStore = keyStore;
 
-      return next();
-    } catch (error) {
-      throw error;
-    }
+    return next();
   },
 );
