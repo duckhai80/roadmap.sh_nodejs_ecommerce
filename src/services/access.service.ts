@@ -1,13 +1,14 @@
-import { BadRequestError } from "@/core";
+import { AuthFailureError, BadRequestError } from "@/core";
 import { shopModel } from "@/models";
 import { KeyStore } from "@/models/keyStore.model";
-import { createTokenPair, getInfoData } from "@/utils";
+import { createTokenPair, getInfoData, JWTPayload, verifyToken } from "@/utils";
 import bcrypt from "bcrypt";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import KeyTokenService from "./keyStore.service";
 import ShopService from "./shop.service";
+import KeyStoreService from "./keyStore.service";
 
 const RoleShop = {
   SHOP: "SHOP",
@@ -29,6 +30,59 @@ const publicKey = fs.readFileSync(
 );
 
 class AccessService {
+  handleRefreshToken = async (refreshToken: string) => {
+    // Check refresh token that have been used
+    const foundedKeyStore =
+      await KeyStoreService.findByRefreshTokenUsed(refreshToken);
+
+    // Handle for found key store used
+    if (foundedKeyStore) {
+      const { shopId, email } = (await verifyToken(
+        refreshToken,
+        foundedKeyStore.publicKey,
+      )) as JWTPayload;
+
+      console.log(`🚀 ~ AccessService ~ { shopId, email}:`, { shopId, email });
+
+      await KeyStoreService.deleteByShopID(shopId);
+      throw new BadRequestError("This refresh token has been used!");
+    }
+
+    // Handle for not found key store in used
+    const holderKeyStore =
+      await KeyStoreService.findByRefreshToken(refreshToken);
+
+    if (!holderKeyStore) throw new AuthFailureError("Shop not registered");
+
+    const { shopId, email } = (await verifyToken(
+      refreshToken,
+      holderKeyStore.publicKey,
+    )) as JWTPayload;
+
+    const foundShop = await ShopService.findOneByEmail(email);
+
+    if (!foundShop) throw new AuthFailureError("Shop not registered");
+
+    // Generate token pair
+    const tokens = await createTokenPair(
+      { shopId, email },
+      holderKeyStore.privateKey,
+      holderKeyStore.publicKey,
+    );
+
+    // Update key store
+    await holderKeyStore.updateOne({
+      $set: {
+        refreshToken: tokens?.refreshToken,
+      },
+      $addToSet: {
+        refreshTokensUsed: refreshToken,
+      },
+    });
+
+    return { shop: { shopId, email }, tokens };
+  };
+
   login = async ({
     email,
     password,

@@ -27,3 +27,7 @@ export const createTokenPair = async (
     return { accessToken, refreshToken };
   } catch (error) {}
 };
+
+export const verifyToken = async (token: string, secretKey: string) => {
+  return await JWT.verify(token, secretKey);
+};

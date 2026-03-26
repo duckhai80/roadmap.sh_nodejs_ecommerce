@@ -46,8 +46,22 @@ class KeyStoreService {
     return await keyStoreModel.findOne({ shop: shopId }).lean();
   };
 
+  static findByRefreshToken = async (refreshToken: string) => {
+    return await keyStoreModel.findOne({ refreshToken: refreshToken });
+  };
+
+  static findByRefreshTokenUsed = async (refreshToken: string) => {
+    return await keyStoreModel
+      .findOne({ refreshTokensUsed: refreshToken })
+      .lean();
+  };
+
   static deleteById = async (keyStoreId: Types.ObjectId) => {
     return await keyStoreModel.deleteOne({ _id: keyStoreId });
+  };
+
+  static deleteByShopID = async (shopId: string) => {
+    return await keyStoreModel.deleteOne({ shop: shopId });
   };
 }
 

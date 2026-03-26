@@ -47,3 +47,12 @@ export class AuthFailureError extends ErrorResponse {
     super(message, status);
   }
 }
+
+export class ForbiddenError extends ErrorResponse {
+  constructor(
+    message: string = ReasonPhrase.FORBIDDEN,
+    status: number = StatusCode.FORBIDDEN,
+  ) {
+    super(message, status);
+  }
+}

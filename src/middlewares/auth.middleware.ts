@@ -1,9 +1,8 @@
 import { HEADER } from "@/constants";
 import { AuthFailureError, NotFoundError } from "@/core";
 import { KeyStoreService } from "@/services";
-import { JWTPayload } from "@/utils";
+import { JWTPayload, verifyToken } from "@/utils";
 import { NextFunction, Request, Response } from "express";
-import JWT from "jsonwebtoken";
 import { catchAsync } from "./catchAsync.middleware";
 
 export const checkAuthentication = catchAsync(
@@ -27,10 +26,10 @@ export const checkAuthentication = catchAsync(
 
     // Verify token
     try {
-      const decodedToken = JWT.verify(
+      const decodedToken = (await verifyToken(
         accessToken,
         keyStore.publicKey,
-      ) as JWTPayload;
+      )) as JWTPayload;
 
       if (shopId !== decodedToken.shopId)
         throw new AuthFailureError("ShopId not match");

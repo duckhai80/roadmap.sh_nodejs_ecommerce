@@ -5,6 +5,13 @@ import { Request, Response } from "express";
 class AccessController {
   // constructor(private readonly accessService) {}
 
+  handleRefreshToken = async (req: Request, res: Response) => {
+    return new OK({
+      message: "Refresh token success!",
+      metadata: await AccessService.handleRefreshToken(req.body.refreshToken),
+    }).send(res);
+  };
+
   login = async (req: Request, res: Response) => {
     return new OK({
       message: "Login success!",
