@@ -1,6 +1,7 @@
-import { keyTokenModel } from "@/models";
+import { keyStoreModel } from "@/models";
+import { Types } from "mongoose";
 
-class KeyTokenService {
+class KeyStoreService {
   static createKeyToken = async ({
     shopId,
     privateKey,
@@ -10,11 +11,11 @@ class KeyTokenService {
     shopId: string;
     privateKey: string;
     publicKey: string;
-    refreshToken?: string;
+    refreshToken?: string | undefined;
   }): Promise<string | null> => {
     try {
       /* Solution 1 */
-      // const token = await keyTokenModel.create({
+      // const token = await keyStoreModel.create({
       //   shop: shopId,
       //   privateKey,
       //   publicKey,
@@ -29,7 +30,7 @@ class KeyTokenService {
         refreshToken,
       };
       const options = { upsert: true, new: true };
-      const tokens = await keyTokenModel.findOneAndUpdate(
+      const tokens = await keyStoreModel.findOneAndUpdate(
         filter,
         update,
         options,
@@ -40,6 +41,14 @@ class KeyTokenService {
       return error;
     }
   };
+
+  static findByShopId = async (shopId: string) => {
+    return await keyStoreModel.findOne({ shop: shopId }).lean();
+  };
+
+  static deleteById = async (keyStoreId: Types.ObjectId) => {
+    return await keyStoreModel.deleteOne({ _id: keyStoreId });
+  };
 }
 
-export default KeyTokenService;
+export default KeyStoreService;

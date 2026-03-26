@@ -1,9 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema, Types } from "mongoose";
 
-const DOCUMENT_NAME = "KeyToken";
-const COLLECTION_NAME = "keytokens";
+const DOCUMENT_NAME = "KeyStore";
+const COLLECTION_NAME = "keystores";
 
-const keyTokenSchema = new mongoose.Schema(
+const keyStoreSchema = new mongoose.Schema(
   {
     shop: {
       type: Schema.Types.ObjectId,
@@ -34,4 +34,8 @@ const keyTokenSchema = new mongoose.Schema(
   },
 );
 
-export default mongoose.model(DOCUMENT_NAME, keyTokenSchema);
+export type KeyStore = InferSchemaType<typeof keyStoreSchema> & {
+  _id: Types.ObjectId;
+};
+
+export default mongoose.model(DOCUMENT_NAME, keyStoreSchema);

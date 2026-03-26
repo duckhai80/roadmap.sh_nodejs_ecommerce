@@ -2,16 +2,18 @@ import apiKeyModel from "@/models/apiKey.model";
 
 class ApiKeyService {
   static findById = async (key: string) => {
-    // const newObjectKey = await apiKeyModel.create({
+    // const apiKeyObject = await apiKeyModel.create({
     //   key: crypto.randomBytes(64).toString("hex"),
     //   permissions: ["0000"],
     // });
 
-    // console.log("🚀 ~ ApiKeyService ~ newObjectKey:", newObjectKey);
+    // console.log("🚀 ~ ApiKeyService ~ apiKeyObject:", apiKeyObject);
 
-    const objectKey = await apiKeyModel.findOne({ key, status: true }).lean();
+    const apiKeyObject = await apiKeyModel
+      .findOne({ key, status: true })
+      .lean();
 
-    return objectKey;
+    return apiKeyObject;
   };
 }
 

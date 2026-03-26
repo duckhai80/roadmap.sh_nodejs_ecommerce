@@ -1,12 +1,13 @@
 import { checkApiKey, checkPermission } from "@/middlewares";
 import accessRoute from "@/routes/access";
 import express from "express";
+import { catchAsync } from "./../middlewares/catchAsync.middleware";
 import jwtRouter from "./jwtRoute";
 
 const router = express.Router();
 
 // Check api key
-router.use(checkApiKey);
+router.use(catchAsync(checkApiKey));
 
 // Check permission
 router.use(checkPermission("0000"));

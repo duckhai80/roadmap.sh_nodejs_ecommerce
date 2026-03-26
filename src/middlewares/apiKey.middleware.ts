@@ -1,48 +1,44 @@
+import { HEADER } from "@/constants";
 import { ApiKeyService } from "@/services";
 import { NextFunction, Request, Response } from "express";
-
-const HEADER = {
-  API_KEY: "x-api-key",
-  AUTHORIZATION: "authorization",
-};
 
 export const checkApiKey = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  try {
-    const apiKey = req.headers[HEADER.API_KEY]?.toString();
+  const apiKeyHeader = req.headers[HEADER.API_KEY] as string;
 
-    if (!apiKey) {
-      return res.status(403).json({
-        message: "Forbidden Error",
-      });
-    }
+  if (!apiKeyHeader) {
+    return res.status(403).json({
+      message: "Forbidden Error",
+    });
+  }
 
-    const objectKey = await ApiKeyService.findById(apiKey);
+  const apiKeyObject = await ApiKeyService.findById(apiKeyHeader);
 
-    if (!objectKey) {
-      return res.status(403).json({
-        message: "Forbidden Error",
-      });
-    }
+  if (!apiKeyObject) {
+    return res.status(403).json({
+      message: "Forbidden Error",
+    });
+  }
 
-    req.objectKey = objectKey;
+  req.apiKeyObject = apiKeyObject;
 
-    return next();
-  } catch (error) {}
+  return next();
 };
 
 export const checkPermission = (permission: string) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.objectKey?.permissions) {
+    if (!req.apiKeyObject?.permissions) {
       return res.status(403).json({
         message: "Permission denied",
       });
     }
 
-    const validPermission = req.objectKey?.permissions.includes(permission);
+    const validPermission = req.apiKeyObject?.permissions.includes(
+      permission as "0000" | "1111" | "2222",
+    );
 
     if (!validPermission) {
       return res.status(403).json({

@@ -1,10 +1,11 @@
-import { Request } from "express";
+import { ApiKey } from "@/models/apiKey.model";
+import { KeyStore } from "@/models/keyStore.model";
 
 declare global {
   namespace Express {
     interface Request {
-      objectKey?: any;
-      user?: any;
+      apiKeyObject?: ApiKey;
+      keyStore?: KeyStore;
     }
   }
 }

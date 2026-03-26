@@ -1,8 +1,12 @@
-import crypto from "crypto";
 import JWT from "jsonwebtoken";
 
+export interface JWTPayload {
+  shopId: string;
+  email: string;
+}
+
 export const createTokenPair = async (
-  payload: any,
+  payload: JWTPayload,
   privateKey: string,
   publicKey: string,
 ) => {

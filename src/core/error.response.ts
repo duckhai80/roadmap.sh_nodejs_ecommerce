@@ -29,3 +29,21 @@ export class BadRequestError extends ErrorResponse {
     super(message, status);
   }
 }
+
+export class NotFoundError extends ErrorResponse {
+  constructor(
+    message: string = ReasonPhrase.NOT_FOUND,
+    status: number = StatusCode.NOT_FOUND,
+  ) {
+    super(message, status);
+  }
+}
+
+export class AuthFailureError extends ErrorResponse {
+  constructor(
+    message: string = ReasonPhrase.UNAUTHORIZED,
+    status: number = StatusCode.UNAUTHORIZED,
+  ) {
+    super(message, status);
+  }
+}

@@ -1,11 +1,12 @@
 import { BadRequestError } from "@/core";
 import { shopModel } from "@/models";
+import { KeyStore } from "@/models/keyStore.model";
 import { createTokenPair, getInfoData } from "@/utils";
 import bcrypt from "bcrypt";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import KeyTokenService from "./keyToken.service";
+import KeyTokenService from "./keyStore.service";
 import ShopService from "./shop.service";
 
 const RoleShop = {
@@ -53,7 +54,7 @@ class AccessService {
 
     // Create token pair
     const tokens = await createTokenPair(
-      { shopId: foundShop._id, email },
+      { shopId: foundShop._id.toString(), email },
       privateKey,
       publicKey,
     );
@@ -76,7 +77,7 @@ class AccessService {
     };
   };
 
-  signUp = async ({
+  signup = async ({
     name,
     email,
     password,
@@ -115,7 +116,7 @@ class AccessService {
 
       // Create token pair
       const tokens = await createTokenPair(
-        { shopId: newShop._id, email },
+        { shopId: newShop._id.toString(), email },
         privateKey,
         publicKey,
       );
@@ -133,6 +134,10 @@ class AccessService {
       code: 200,
       metadata: null,
     };
+  };
+
+  logout = async (keyStore: KeyStore) => {
+    return await KeyTokenService.deleteById(keyStore._id);
   };
 }
 
