@@ -14,7 +14,7 @@ export class SuccessResponse {
   }: {
     message: string;
     status: number;
-    reasonPhrase: string;
+    reasonPhrase?: string;
     metadata: any;
   }) {
     this.message = message ? message : reasonPhrase;

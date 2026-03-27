@@ -1,4 +1,4 @@
-import accessController from "@/controllers/access.controller";
+import { accessController } from "@/controllers";
 import { checkAuthentication } from "@/middlewares";
 import express from "express";
 import { catchAsync } from "./../../middlewares/catchAsync.middleware";

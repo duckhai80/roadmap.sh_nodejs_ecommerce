@@ -1,3 +1,4 @@
+import { PRODUCT_TYPE } from "@/constants";
 import mongoose, { InferSchemaType, Schema } from "mongoose";
 
 const DOCUMENT_NAME = "Product";
@@ -13,7 +14,11 @@ const productSchema = new mongoose.Schema(
     product_type: {
       type: String,
       required: true,
-      enum: ["Electronics", "Clothing", "Furniture"],
+      enum: [
+        PRODUCT_TYPE.ELECTRONICS,
+        PRODUCT_TYPE.CLOTHING,
+        PRODUCT_TYPE.FURNITURE,
+      ],
     },
     product_shop: { type: Schema.Types.ObjectId, ref: "Shop" },
     product_attributes: { type: Schema.Types.Mixed, required: true },

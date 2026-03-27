@@ -10,4 +10,4 @@ export const getInfoData = ({
   return _.pick(object, fields);
 };
 
-export * from "./authUtils";
+export * from "./auth.util";
