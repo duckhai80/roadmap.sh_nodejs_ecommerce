@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose, { InferSchemaType, Schema } from "mongoose";
 
 const DOCUMENT_NAME = "Electronics";
 const COLLECTION_NAME = "electronics";
@@ -8,7 +8,7 @@ const electronicsSchema = new mongoose.Schema(
     manufactory: { type: String, required: true },
     model: String,
     color: String,
-    // product_shop: { type: Schema.Types.ObjectId, ref: "Shop" },
+    product_shop: { type: Schema.Types.ObjectId, ref: "Shop" },
   },
   {
     timestamps: true,

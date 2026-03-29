@@ -8,10 +8,10 @@ class ProductController {
     return new SuccessResponse({
       message: "Create new product success",
       status: 201,
-      metadata: await ProductFactory.createProduct(
-        req.body.product_type,
-        req.body,
-      ),
+      metadata: await ProductFactory.createProduct(req.body.product_type, {
+        ...req.body,
+        product_shop: req.shop.shopId,
+      }),
     }).send(res);
   };
 }

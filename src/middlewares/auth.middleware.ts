@@ -53,6 +53,7 @@ export const checkAuthentication = catchAsync(
       throw new AuthFailureError("ShopId not match");
 
     req.keyStore = keyStore;
+    req.shop = decodedToken;
 
     return next();
   },
