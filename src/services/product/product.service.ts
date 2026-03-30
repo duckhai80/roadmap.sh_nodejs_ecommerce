@@ -1,5 +1,12 @@
 import { BadRequestError } from "@/core";
-import { productModel } from "@/models";
+import {
+  findAllDraftProductsByShopId as findAllDraftsByShopId,
+  findAllPublishedProductsById as findAllPublishedByShopId,
+  productModel,
+  publishProductByShopId,
+  searchProducts,
+  unpublishProductByShopId,
+} from "@/models";
 import { Types } from "mongoose";
 
 interface ProductPayload {
@@ -49,6 +56,63 @@ export abstract class ProductService {
   }
 
   abstract createProduct(): Promise<any>;
+
+  // Find all draft products by shop id
+  static async findAllDraftsByShopId({
+    product_shop,
+    limit = 50,
+    skip = 0,
+  }: {
+    product_shop: string;
+    limit?: number;
+    skip?: number;
+  }) {
+    const query = { product_shop, isDraft: true };
+
+    return await findAllDraftsByShopId({ query, limit, skip });
+  }
+
+  // Find all published products by shop id
+  static async findAllPublishedByShopId({
+    product_shop,
+    limit = 50,
+    skip = 0,
+  }: {
+    product_shop: string;
+    limit?: number;
+    skip?: number;
+  }) {
+    const query = { product_shop, isPublished: true };
+
+    return await findAllPublishedByShopId({ query, limit, skip });
+  }
+
+  // Publish product by shop id
+  static async publishProductByShopId({
+    product_shop,
+    product_id,
+  }: {
+    product_shop: string;
+    product_id: string;
+  }) {
+    return await publishProductByShopId({ product_shop, product_id });
+  }
+
+  // Unpublish product by shop id
+  static async unpublishProductByShopId({
+    product_shop,
+    product_id,
+  }: {
+    product_shop: string;
+    product_id: string;
+  }) {
+    return await unpublishProductByShopId({ product_shop, product_id });
+  }
+
+  // Search products
+  static async searchProducts(keySearch: string) {
+    return await searchProducts(keySearch);
+  }
 }
 
 type ProductServiceConstructor = new (
@@ -82,7 +146,7 @@ export class ProductFactory {
   static createProduct(type: string, payload: ProductPayload) {
     const productTypeClass = ProductFactory.productRegistry.get(type);
 
-    if (!productTypeClass) throw new BadRequestError(`Invalid Type: ${type}`);
+    if (!productTypeClass) throw new BadRequestError(`Invalid type: ${type}`);
 
     return new productTypeClass(payload).createProduct();
   }

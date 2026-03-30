@@ -23,6 +23,7 @@
     "lodash": "^4.17.23",
     "mongoose": "^9.1.5",
     "redis": "^5.11.0",
+    "slugify": "^1.6.8",
     "tsc-alias": "^1.8.16"
   },
   "devDependencies": {
