@@ -1,0 +1,21 @@
+import mongoose, { InferSchemaType, Schema } from "mongoose";
+
+const DOCUMENT_NAME = "Furniture";
+const COLLECTION_NAME = "furnitures";
+
+const furnitureSchema = new mongoose.Schema(
+  {
+    manufactory: { type: String, required: true },
+    model: String,
+    color: String,
+    product_shop: { type: Schema.Types.ObjectId, ref: "Shop" },
+  },
+  {
+    timestamps: true,
+    collection: COLLECTION_NAME,
+  },
+);
+
+export type Furniture = InferSchemaType<typeof furnitureSchema>;
+
+export default mongoose.model(DOCUMENT_NAME, furnitureSchema);
