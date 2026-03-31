@@ -1,17 +1,18 @@
+import { formatSelectData, formatUnselectData } from "@/utils";
 import { Types } from "mongoose";
 import { productModel } from "../product";
 
 export const queryProducts = async ({
-  query,
+  filter,
   limit,
   skip,
 }: {
-  query: any;
+  filter: any;
   limit: number;
   skip: number;
 }) => {
   return await productModel
-    .find(query)
+    .find(filter)
     .populate("product_shop", "name email -_id")
     .limit(limit)
     .skip(skip)
@@ -34,28 +35,67 @@ export const searchProducts = async (keySearch: string) => {
   return foundProducts;
 };
 
-export const findAllDraftProductsByShopId = async ({
-  query,
+export const findAllProducts = async ({
+  filter,
   limit,
-  skip,
+  page,
+  sort,
+  select,
 }: {
-  query: any;
+  filter: any;
   limit: number;
-  skip: number;
+  page: number;
+  sort: string;
+  select: string[];
 }) => {
-  return await queryProducts({ query, limit, skip });
+  const skip = (page - 1) * limit;
+  const sortBy: { [key: string]: 1 | -1 } =
+    sort === "ctime" ? { _id: -1 } : { _id: 1 };
+
+  return await productModel
+    .find(filter)
+    .limit(limit)
+    .skip(skip)
+    .sort(sortBy)
+    .select(formatSelectData(select))
+    .lean();
 };
 
-export const findAllPublishedProductsById = async ({
-  query,
+export const findProduct = async ({
+  product_id,
+  unselect,
+}: {
+  product_id: string;
+  unselect: string[];
+}) => {
+  return await productModel
+    .findById(product_id)
+    .select(formatUnselectData(unselect))
+    .lean();
+};
+
+export const findAllDraftProductsByShopId = async ({
+  filter,
   limit,
   skip,
 }: {
-  query: any;
+  filter: any;
   limit: number;
   skip: number;
 }) => {
-  return await queryProducts({ query, limit, skip });
+  return await queryProducts({ filter, limit, skip });
+};
+
+export const findAllPublishedProductsByShopId = async ({
+  filter,
+  limit,
+  skip,
+}: {
+  filter: any;
+  limit: number;
+  skip: number;
+}) => {
+  return await queryProducts({ filter, limit, skip });
 };
 
 export const publishProductByShopId = async ({

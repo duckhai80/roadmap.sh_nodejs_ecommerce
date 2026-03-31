@@ -12,6 +12,8 @@ const productRouter = express.Router();
 // Check api key
 productRouter.use(catchAsync(checkApiKey));
 
+productRouter.get("", catchAsync(productController.getAllProducts));
+productRouter.get("/:product_id", catchAsync(productController.getProduct));
 productRouter.get(
   "/search/:keySearch",
   catchAsync(productController.getAllSearchProducts),

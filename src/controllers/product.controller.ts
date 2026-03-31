@@ -14,11 +14,31 @@ class ProductController {
     }).send(res);
   };
 
+  getAllProducts = async (req: Request, res: Response) => {
+    return new SuccessResponse({
+      message: "Get all products success",
+      status: 200,
+      metadata: await ProductService.findAllProducts({
+        filter: req.query,
+      }),
+    }).send(res);
+  };
+
+  getProduct = async (req: Request, res: Response) => {
+    return new SuccessResponse({
+      message: "Get product success",
+      status: 200,
+      metadata: await ProductService.findProduct({
+        product_id: req.params.product_id as string,
+      }),
+    }).send(res);
+  };
+
   getAllDraftsByShopId = async (req: Request, res: Response) => {
     return new SuccessResponse({
       message: "Found draft products success",
       status: 200,
-      metadata: await ProductService.findAllDraftsByShopId({
+      metadata: await ProductService.findAllDraftProductsByShopId({
         product_shop: req.shop.shopId,
       }),
     }).send(res);
@@ -28,7 +48,7 @@ class ProductController {
     return new SuccessResponse({
       message: "Found published products success",
       status: 200,
-      metadata: await ProductService.findAllPublishedByShopId({
+      metadata: await ProductService.findAllPublishedProductsByShopId({
         product_shop: req.shop.shopId,
       }),
     }).send(res);

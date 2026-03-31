@@ -1,7 +1,9 @@
 import { BadRequestError } from "@/core";
 import {
-  findAllDraftProductsByShopId as findAllDraftsByShopId,
-  findAllPublishedProductsById as findAllPublishedByShopId,
+  findAllDraftProductsByShopId,
+  findAllProducts,
+  findAllPublishedProductsByShopId,
+  findProduct,
   productModel,
   publishProductByShopId,
   searchProducts,
@@ -57,8 +59,37 @@ export abstract class ProductService {
 
   abstract createProduct(): Promise<any>;
 
+  // Find all products
+  static async findAllProducts({
+    filter = { isPublished: true },
+    limit = 50,
+    page = 1,
+    sort = "ctime",
+  }: {
+    filter: any;
+    limit?: number;
+    page?: number;
+    sort?: string;
+  }) {
+    return await findAllProducts({
+      filter,
+      limit,
+      page,
+      sort,
+      select: ["product_name", "product_price", "product_thumb"],
+    });
+  }
+
+  // Find product
+  static async findProduct({ product_id }: { product_id: string }) {
+    return await findProduct({ product_id, unselect: ["__v"] });
+  }
+
+  // Update product
+  static async updateProduct() {}
+
   // Find all draft products by shop id
-  static async findAllDraftsByShopId({
+  static async findAllDraftProductsByShopId({
     product_shop,
     limit = 50,
     skip = 0,
@@ -67,13 +98,13 @@ export abstract class ProductService {
     limit?: number;
     skip?: number;
   }) {
-    const query = { product_shop, isDraft: true };
+    const filter = { product_shop, isDraft: true };
 
-    return await findAllDraftsByShopId({ query, limit, skip });
+    return await findAllDraftProductsByShopId({ filter, limit, skip });
   }
 
   // Find all published products by shop id
-  static async findAllPublishedByShopId({
+  static async findAllPublishedProductsByShopId({
     product_shop,
     limit = 50,
     skip = 0,
@@ -82,9 +113,9 @@ export abstract class ProductService {
     limit?: number;
     skip?: number;
   }) {
-    const query = { product_shop, isPublished: true };
+    const filter = { product_shop, isPublished: true };
 
-    return await findAllPublishedByShopId({ query, limit, skip });
+    return await findAllPublishedProductsByShopId({ filter, limit, skip });
   }
 
   // Publish product by shop id
