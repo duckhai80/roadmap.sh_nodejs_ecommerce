@@ -12,34 +12,45 @@ const productRouter = express.Router();
 // Check api key
 productRouter.use(catchAsync(checkApiKey));
 
-productRouter.get("", catchAsync(productController.getAllProducts));
-productRouter.get("/:product_id", catchAsync(productController.getProduct));
-productRouter.get(
-  "/search/:keySearch",
-  catchAsync(productController.getAllSearchProducts),
+productRouter.post(
+  "/",
+  checkPermission("0000"),
+  checkAuthentication,
+  catchAsync(productController.create),
 );
-
-// Check permission
-productRouter.use(checkPermission("0000"));
-
-productRouter.use(checkAuthentication);
-
-productRouter.post("/", catchAsync(productController.create));
 productRouter.get(
   "/drafts",
-  catchAsync(productController.getAllDraftsByShopId),
+  checkPermission("0000"),
+  checkAuthentication,
+  catchAsync(productController.findAllDrafts),
 );
 productRouter.get(
   "/published",
-  catchAsync(productController.getAllPublishedByShopId),
+  checkPermission("0000"),
+  checkAuthentication,
+  catchAsync(productController.findAllPublished),
 );
 productRouter.post(
-  "/publish/:id",
-  catchAsync(productController.publishProductByShopId),
+  "/publish/:productId",
+  checkPermission("0000"),
+  checkAuthentication,
+  catchAsync(productController.publish),
 );
 productRouter.post(
-  "/unpublish/:id",
-  catchAsync(productController.unpublishProductByShopId),
+  "/unpublish/:productId",
+  checkPermission("0000"),
+  checkAuthentication,
+  catchAsync(productController.unpublish),
 );
+
+productRouter.get("", catchAsync(productController.findAll));
+productRouter.get("/:productId", catchAsync(productController.findOne));
+productRouter.patch(
+  "/:productId",
+  checkPermission("0000"),
+  checkAuthentication,
+  catchAsync(productController.update),
+);
+productRouter.get("/search/:keySearch", catchAsync(productController.search));
 
 export default productRouter;

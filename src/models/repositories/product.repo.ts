@@ -1,5 +1,5 @@
 import { formatSelectData, formatUnselectData } from "@/utils";
-import { Types } from "mongoose";
+import { Model, Types } from "mongoose";
 import { productModel } from "../product";
 
 export const queryProducts = async ({
@@ -13,7 +13,7 @@ export const queryProducts = async ({
 }) => {
   return await productModel
     .find(filter)
-    .populate("product_shop", "name email -_id")
+    .populate("shopId", "name email -_id")
     .limit(limit)
     .skip(skip)
     .sort({ updatedAt: -1 })
@@ -62,19 +62,38 @@ export const findAllProducts = async ({
 };
 
 export const findProduct = async ({
-  product_id,
+  productId,
   unselect,
 }: {
-  product_id: string;
+  productId: string;
   unselect: string[];
 }) => {
   return await productModel
-    .findById(product_id)
+    .findById(productId)
+    .populate("shopId", "name email -_id")
     .select(formatUnselectData(unselect))
     .lean();
 };
 
-export const findAllDraftProductsByShopId = async ({
+export const updateProduct = async ({
+  productId,
+  payload,
+  model,
+  isNew = true,
+}: {
+  productId: string;
+  payload: any;
+  model: Model<any>;
+  isNew?: boolean;
+}) => {
+  return await model
+    .findByIdAndUpdate(new Types.ObjectId(productId), payload, {
+      new: isNew,
+    })
+    .lean();
+};
+
+export const findAllDraftProducts = async ({
   filter,
   limit,
   skip,
@@ -86,7 +105,7 @@ export const findAllDraftProductsByShopId = async ({
   return await queryProducts({ filter, limit, skip });
 };
 
-export const findAllPublishedProductsByShopId = async ({
+export const findAllPublishedProducts = async ({
   filter,
   limit,
   skip,
@@ -98,16 +117,16 @@ export const findAllPublishedProductsByShopId = async ({
   return await queryProducts({ filter, limit, skip });
 };
 
-export const publishProductByShopId = async ({
-  product_shop,
-  product_id,
+export const publishProduct = async ({
+  shopId,
+  productId,
 }: {
-  product_shop: string;
-  product_id: string;
+  shopId: string;
+  productId: string;
 }) => {
   const foundShop = await productModel.findOne({
-    product_shop: new Types.ObjectId(product_shop),
-    _id: new Types.ObjectId(product_id),
+    shopId: new Types.ObjectId(shopId),
+    _id: new Types.ObjectId(productId),
   });
 
   if (!foundShop) return null;
@@ -120,16 +139,16 @@ export const publishProductByShopId = async ({
   return modifiedCount;
 };
 
-export const unpublishProductByShopId = async ({
-  product_shop,
-  product_id,
+export const unpublishProduct = async ({
+  shopId,
+  productId,
 }: {
-  product_shop: string;
-  product_id: string;
+  shopId: string;
+  productId: string;
 }) => {
   const foundShop = await productModel.findOne({
-    product_shop: new Types.ObjectId(product_shop),
-    _id: new Types.ObjectId(product_id),
+    shopId: new Types.ObjectId(shopId),
+    _id: new Types.ObjectId(productId),
   });
 
   if (!foundShop) return null;

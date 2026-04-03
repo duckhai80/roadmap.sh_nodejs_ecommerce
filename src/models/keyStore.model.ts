@@ -5,7 +5,7 @@ const COLLECTION_NAME = "keystores";
 
 const keyStoreSchema = new mongoose.Schema(
   {
-    shop: {
+    shopId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "Shop",

@@ -1,23 +1,40 @@
 import { PRODUCT_TYPE } from "@/constants";
 import { BadRequestError } from "@/core";
-import { electronicsModel } from "@/models";
+import { electronicsModel, updateProduct } from "@/models";
+import { removeUndefinedNullObject, updateNestedObjectPatch } from "@/utils";
 import { ProductFactory, ProductService } from "./product.service";
 
 export class ElectronicsService extends ProductService {
-  async createProduct() {
+  async create() {
     const newElectronics = await electronicsModel.create({
-      ...this.product_attributes,
-      product_shop: this.product_shop,
+      ...this.attributes,
+      shopId: this.shopId,
     });
 
     if (!newElectronics)
       throw new BadRequestError("Failed to create electronics");
 
-    const newProduct = await super.insertProduct(newElectronics._id);
+    const newProduct = await super.create(newElectronics._id);
 
     if (!newProduct) throw new BadRequestError("Failed to create product");
 
     return newProduct;
+  }
+
+  async update(productId: string) {
+    const objectPayload = removeUndefinedNullObject(this);
+
+    if (Object.keys(objectPayload.attributes).length > 0) {
+      await updateProduct({
+        productId,
+        payload: updateNestedObjectPatch(objectPayload.attributes),
+        model: electronicsModel,
+      });
+    }
+
+    const updatedProduct = await super.update(productId);
+
+    return updatedProduct;
   }
 }
 

@@ -1,66 +1,77 @@
+import { PRODUCT_TYPE } from "@/constants";
 import { BadRequestError } from "@/core";
 import {
-  findAllDraftProductsByShopId,
+  findAllDraftProducts,
   findAllProducts,
-  findAllPublishedProductsByShopId,
+  findAllPublishedProducts,
   findProduct,
   productModel,
-  publishProductByShopId,
+  publishProduct,
   searchProducts,
-  unpublishProductByShopId,
+  unpublishProduct,
+  updateProduct,
 } from "@/models";
+import { updateNestedObjectPatch } from "@/utils";
 import { Types } from "mongoose";
 
 interface ProductPayload {
-  product_name: string;
-  product_thumb: string;
-  product_description: string;
-  product_price: number;
-  product_quantity: number;
-  product_type: string;
-  product_shop?: Types.ObjectId | null;
-  product_attributes: any;
+  name: string;
+  thumbnail: string;
+  description: string;
+  price: number;
+  quantity: number;
+  type: string;
+  shopId?: Types.ObjectId | null;
+  attributes: any;
 }
 
 // Define base product class
 export abstract class ProductService {
-  product_name: string;
-  product_thumb: string;
-  product_description: string;
-  product_price: number;
-  product_quantity: number;
-  product_type: string;
-  product_shop?: Types.ObjectId | null;
-  product_attributes: any;
+  name: string;
+  thumbnail: string;
+  description: string;
+  price: number;
+  quantity: number;
+  type: string;
+  shopId?: Types.ObjectId | null;
+  attributes: any;
 
   constructor({
-    product_name,
-    product_thumb,
-    product_description,
-    product_price,
-    product_quantity,
-    product_type,
-    product_shop,
-    product_attributes,
+    name,
+    thumbnail,
+    description,
+    price,
+    quantity,
+    type,
+    shopId,
+    attributes,
   }: ProductPayload) {
-    this.product_name = product_name;
-    this.product_thumb = product_thumb;
-    this.product_description = product_description;
-    this.product_price = product_price;
-    this.product_quantity = product_quantity;
-    this.product_type = product_type;
-    product_shop && (this.product_shop = product_shop);
-    this.product_attributes = product_attributes;
+    this.name = name;
+    this.thumbnail = thumbnail;
+    this.description = description;
+    this.price = price;
+    this.quantity = quantity;
+    this.type = type;
+    shopId && (this.shopId = shopId);
+    this.attributes = attributes;
   }
 
-  async insertProduct(product_id: Types.ObjectId) {
-    return await productModel.create({ ...this, _id: product_id });
+  // Create product
+  async create(productId: Types.ObjectId) {
+    return await productModel.create({ ...this, _id: productId });
   }
 
-  abstract createProduct(): Promise<any>;
+  // Update product
+  async update(productId: string) {
+    return await updateProduct({
+      productId,
+      payload: updateNestedObjectPatch(this),
+      model: productModel,
+    });
+  }
 
   // Find all products
-  static async findAllProducts({
+  static async findAll({
     filter = { isPublished: true },
     limit = 50,
     page = 1,
@@ -76,88 +87,86 @@ export abstract class ProductService {
       limit,
       page,
       sort,
-      select: ["product_name", "product_price", "product_thumb"],
+      select: ["name", "price", "thumbnail"],
     });
   }
 
   // Find product
-  static async findProduct({ product_id }: { product_id: string }) {
-    return await findProduct({ product_id, unselect: ["__v"] });
+  static async findOne({ productId }: { productId: string }) {
+    return await findProduct({ productId, unselect: ["__v"] });
   }
 
-  // Update product
-  static async updateProduct() {}
-
   // Find all draft products by shop id
-  static async findAllDraftProductsByShopId({
-    product_shop,
+  static async findAllDrafts({
+    shopId,
     limit = 50,
     skip = 0,
   }: {
-    product_shop: string;
+    shopId: string;
     limit?: number;
     skip?: number;
   }) {
-    const filter = { product_shop, isDraft: true };
+    const filter = { shopId, isDraft: true };
 
-    return await findAllDraftProductsByShopId({ filter, limit, skip });
+    return await findAllDraftProducts({ filter, limit, skip });
   }
 
   // Find all published products by shop id
-  static async findAllPublishedProductsByShopId({
-    product_shop,
+  static async findAllPublished({
+    shopId,
     limit = 50,
     skip = 0,
   }: {
-    product_shop: string;
+    shopId: string;
     limit?: number;
     skip?: number;
   }) {
-    const filter = { product_shop, isPublished: true };
+    const filter = { shopId, isPublished: true };
 
-    return await findAllPublishedProductsByShopId({ filter, limit, skip });
+    return await findAllPublishedProducts({ filter, limit, skip });
   }
 
   // Publish product by shop id
-  static async publishProductByShopId({
-    product_shop,
-    product_id,
+  static async publish({
+    shopId,
+    productId,
   }: {
-    product_shop: string;
-    product_id: string;
+    shopId: string;
+    productId: string;
   }) {
-    return await publishProductByShopId({ product_shop, product_id });
+    return await publishProduct({ shopId, productId });
   }
 
   // Unpublish product by shop id
-  static async unpublishProductByShopId({
-    product_shop,
-    product_id,
+  static async unpublish({
+    shopId,
+    productId,
   }: {
-    product_shop: string;
-    product_id: string;
+    shopId: string;
+    productId: string;
   }) {
-    return await unpublishProductByShopId({ product_shop, product_id });
+    return await unpublishProduct({ shopId, productId });
   }
 
   // Search products
-  static async searchProducts(keySearch: string) {
+  static async search(keySearch: string) {
     return await searchProducts(keySearch);
   }
 }
 
-type ProductServiceConstructor = new (
-  payload: ProductPayload,
-) => ProductService;
+type ProductServiceConstructor = new (payload: ProductPayload) => {
+  create(): Promise<any>;
+  update(productId: string): Promise<any>;
+};
 
 export class ProductFactory {
   /* Use simple factory pattern */
-  // static async createProduct(type: PRODUCT_TYPE, payload: Product) {
+  // static async create(type: PRODUCT_TYPE, payload: Product) {
   //   switch (type) {
   //     case PRODUCT_TYPE.CLOTHING:
-  //       return new ClothingService(payload).createProduct();
+  //       return new ClothingService(payload).create();
   //     case PRODUCT_TYPE.ELECTRONICS:
-  //       return new ElectronicsService(payload).createProduct();
+  //       return new ElectronicsService(payload).create();
   //     default:
   //       throw new BadRequestError("Invalid product type");
   //   }
@@ -174,11 +183,23 @@ export class ProductFactory {
     ProductFactory.productRegistry.set(type, classRef);
   }
 
-  static createProduct(type: string, payload: ProductPayload) {
+  static create(type: PRODUCT_TYPE, payload: ProductPayload) {
     const productTypeClass = ProductFactory.productRegistry.get(type);
 
     if (!productTypeClass) throw new BadRequestError(`Invalid type: ${type}`);
 
-    return new productTypeClass(payload).createProduct();
+    return new productTypeClass(payload).create();
+  }
+
+  static update(
+    type: PRODUCT_TYPE,
+    productId: string,
+    payload: ProductPayload,
+  ) {
+    const productTypeClass = ProductFactory.productRegistry.get(type);
+
+    if (!productTypeClass) throw new BadRequestError(`Invalid type: ${type}`);
+
+    return new productTypeClass(payload).update(productId);
   }
 }

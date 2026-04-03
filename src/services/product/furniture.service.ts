@@ -1,22 +1,39 @@
 import { PRODUCT_TYPE } from "@/constants";
 import { BadRequestError } from "@/core";
-import { furnitureModel } from "@/models";
+import { furnitureModel, updateProduct } from "@/models";
+import { removeUndefinedNullObject, updateNestedObjectPatch } from "@/utils";
 import { ProductFactory, ProductService } from "./product.service";
 
 export class FurnitureService extends ProductService {
-  async createProduct() {
+  async create() {
     const newFurniture = await furnitureModel.create({
-      ...this.product_attributes,
-      product_shop: this.product_shop,
+      ...this.attributes,
+      shopId: this.shopId,
     });
 
     if (!newFurniture) throw new BadRequestError("Failed to create furniture");
 
-    const newProduct = await super.insertProduct(newFurniture._id);
+    const newProduct = await super.create(newFurniture._id);
 
     if (!newProduct) throw new BadRequestError("Failed to create product");
 
     return newProduct;
+  }
+
+  async update(productId: string) {
+    const objectPayload = removeUndefinedNullObject(this);
+
+    if (Object.keys(objectPayload.attributes).length > 0) {
+      await updateProduct({
+        productId,
+        payload: updateNestedObjectPatch(objectPayload.attributes),
+        model: furnitureModel,
+      });
+    }
+
+    const updatedProduct = await super.update(productId);
+
+    return updatedProduct;
   }
 }
 

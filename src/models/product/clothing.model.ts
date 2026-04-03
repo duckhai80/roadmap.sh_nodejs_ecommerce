@@ -8,7 +8,7 @@ const clothingSchema = new mongoose.Schema(
     brand: { type: String, required: true },
     size: String,
     material: String,
-    product_shop: { type: Schema.Types.ObjectId, ref: "Shop" },
+    shopId: { type: Schema.Types.ObjectId, ref: "Shop" },
   },
   {
     timestamps: true,

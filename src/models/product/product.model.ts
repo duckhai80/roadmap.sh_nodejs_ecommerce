@@ -7,13 +7,13 @@ const COLLECTION_NAME = "products";
 
 const productSchema = new mongoose.Schema(
   {
-    product_name: { type: String, required: true },
-    product_thumb: { type: String, required: true },
-    product_description: { type: String, required: true },
-    product_slug: String,
-    product_price: { type: Number, required: true },
-    product_quantity: { type: Number, required: true },
-    product_type: {
+    name: { type: String, required: true },
+    thumbnail: { type: String, required: true },
+    description: { type: String, required: true },
+    slug: String,
+    price: { type: Number, required: true },
+    quantity: { type: Number, required: true },
+    type: {
       type: String,
       required: true,
       enum: [
@@ -22,9 +22,9 @@ const productSchema = new mongoose.Schema(
         PRODUCT_TYPE.FURNITURE,
       ],
     },
-    product_shop: { type: Schema.Types.ObjectId, ref: "Shop" },
-    product_attributes: { type: Schema.Types.Mixed, required: true },
-    product_ratingAverage: {
+    shopId: { type: Schema.Types.ObjectId, ref: "Shop" },
+    attributes: { type: Schema.Types.Mixed, required: true },
+    ratingAverage: {
       type: Number,
       default: 4.5,
       min: [1, "Rating must be higher than 1.0"],
@@ -32,7 +32,7 @@ const productSchema = new mongoose.Schema(
       set: (val: number) => Math.round(val * 10) / 10,
     },
 
-    product_variations: {
+    variations: {
       type: Array,
       default: [],
     },
@@ -46,10 +46,10 @@ const productSchema = new mongoose.Schema(
 );
 
 // Create index for search products
-productSchema.index({ product_name: "text", product_description: "text" });
+productSchema.index({ name: "text", description: "text" });
 
 productSchema.pre("save", function (next) {
-  this.product_slug = slugify(this.product_name, { lower: true });
+  this.slug = slugify(this.name, { lower: true });
 });
 
 export type Product = InferSchemaType<typeof productSchema>;

@@ -8,7 +8,7 @@ const electronicsSchema = new mongoose.Schema(
     manufactory: { type: String, required: true },
     model: String,
     color: String,
-    product_shop: { type: Schema.Types.ObjectId, ref: "Shop" },
+    shopId: { type: Schema.Types.ObjectId, ref: "Shop" },
   },
   {
     timestamps: true,

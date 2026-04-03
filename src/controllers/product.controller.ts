@@ -7,82 +7,95 @@ class ProductController {
     return new SuccessResponse({
       message: "Create new product success",
       status: 201,
-      metadata: await ProductFactory.createProduct(req.body.product_type, {
+      metadata: await ProductFactory.create(req.body.type, {
         ...req.body,
-        product_shop: req.shop.shopId,
+        shopId: req.shop.shopId,
       }),
     }).send(res);
   };
 
-  getAllProducts = async (req: Request, res: Response) => {
+  update = async (req: Request, res: Response) => {
+    return new SuccessResponse({
+      message: "Update product success",
+      status: 200,
+      metadata: await ProductFactory.update(
+        req.body.type,
+        req.params.productId as string,
+        {
+          ...req.body,
+          shopId: req.shop.shopId,
+        },
+      ),
+    }).send(res);
+  };
+
+  findAll = async (req: Request, res: Response) => {
     return new SuccessResponse({
       message: "Get all products success",
       status: 200,
-      metadata: await ProductService.findAllProducts({
+      metadata: await ProductService.findAll({
         filter: req.query,
       }),
     }).send(res);
   };
 
-  getProduct = async (req: Request, res: Response) => {
+  findOne = async (req: Request, res: Response) => {
     return new SuccessResponse({
       message: "Get product success",
       status: 200,
-      metadata: await ProductService.findProduct({
-        product_id: req.params.product_id as string,
+      metadata: await ProductService.findOne({
+        productId: req.params.productId as string,
       }),
     }).send(res);
   };
 
-  getAllDraftsByShopId = async (req: Request, res: Response) => {
+  findAllDrafts = async (req: Request, res: Response) => {
     return new SuccessResponse({
       message: "Found draft products success",
       status: 200,
-      metadata: await ProductService.findAllDraftProductsByShopId({
-        product_shop: req.shop.shopId,
+      metadata: await ProductService.findAllDrafts({
+        shopId: req.shop.shopId,
       }),
     }).send(res);
   };
 
-  getAllPublishedByShopId = async (req: Request, res: Response) => {
+  findAllPublished = async (req: Request, res: Response) => {
     return new SuccessResponse({
       message: "Found published products success",
       status: 200,
-      metadata: await ProductService.findAllPublishedProductsByShopId({
-        product_shop: req.shop.shopId,
+      metadata: await ProductService.findAllPublished({
+        shopId: req.shop.shopId,
       }),
     }).send(res);
   };
 
-  publishProductByShopId = async (req: Request, res: Response) => {
+  publish = async (req: Request, res: Response) => {
     return new SuccessResponse({
       message: "Publish product success",
       status: 200,
-      metadata: await ProductService.publishProductByShopId({
-        product_id: req.params.id as string,
-        product_shop: req.shop.shopId,
+      metadata: await ProductService.publish({
+        productId: req.params.productId as string,
+        shopId: req.shop.shopId,
       }),
     }).send(res);
   };
 
-  unpublishProductByShopId = async (req: Request, res: Response) => {
+  unpublish = async (req: Request, res: Response) => {
     return new SuccessResponse({
       message: "Unpublish product success",
       status: 200,
-      metadata: await ProductService.unpublishProductByShopId({
-        product_id: req.params.id as string,
-        product_shop: req.shop.shopId,
+      metadata: await ProductService.unpublish({
+        productId: req.params.productId as string,
+        shopId: req.shop.shopId,
       }),
     }).send(res);
   };
 
-  getAllSearchProducts = async (req: Request, res: Response) => {
+  search = async (req: Request, res: Response) => {
     return new SuccessResponse({
       message: "Found search products success",
       status: 200,
-      metadata: await ProductService.searchProducts(
-        req.params.keySearch as string,
-      ),
+      metadata: await ProductService.search(req.params.keySearch as string),
     }).send(res);
   };
 }

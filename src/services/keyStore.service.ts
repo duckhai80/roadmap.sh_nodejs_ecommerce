@@ -16,13 +16,13 @@ class KeyStoreService {
     try {
       /* Solution 1 */
       // const token = await keyStoreModel.create({
-      //   shop: shopId,
+      //   shopId: shopId,
       //   privateKey,
       //   publicKey,
       // });
 
       /* Solution 2 */
-      const filter = { shop: shopId };
+      const filter = { shopId };
       const update = {
         privateKey,
         publicKey,
@@ -43,7 +43,7 @@ class KeyStoreService {
   };
 
   static findByShopId = async (shopId: string) => {
-    return await keyStoreModel.findOne({ shop: shopId }).lean();
+    return await keyStoreModel.findOne({ shopId }).lean();
   };
 
   static findByRefreshToken = async (refreshToken: string) => {
@@ -74,7 +74,7 @@ class KeyStoreService {
   };
 
   static deleteByShopID = async (shopId: string) => {
-    return await keyStoreModel.deleteOne({ shop: shopId });
+    return await keyStoreModel.deleteOne({ shopId });
   };
 }
 
