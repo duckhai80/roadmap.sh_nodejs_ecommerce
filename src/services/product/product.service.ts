@@ -1,6 +1,7 @@
 import { PRODUCT_TYPE } from "@/constants";
 import { BadRequestError } from "@/core";
 import {
+  createInventory,
   findAllDraftProducts,
   findAllProducts,
   findAllPublishedProducts,
@@ -58,7 +59,18 @@ export abstract class ProductService {
 
   // Create product
   async create(productId: Types.ObjectId) {
-    return await productModel.create({ ...this, _id: productId });
+    const newProduct = await productModel.create({ ...this, _id: productId });
+
+    if (newProduct) {
+      await createInventory({
+        productId: newProduct._id.toString(),
+        shopId: this.shopId!.toString(),
+        stock: this.quantity,
+        location: this.attributes.location,
+      });
+    }
+
+    return newProduct;
   }
 
   // Update product
