@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType, Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema, Types } from "mongoose";
 
 const DOCUMENT_NAME = "Inventory";
 const COLLECTION_NAME = "inventories";
@@ -20,7 +20,9 @@ const inventorySchema = new mongoose.Schema(
   { collection: COLLECTION_NAME, timestamps: true },
 );
 
-export type Inventory = InferSchemaType<typeof inventorySchema>;
+export type Inventory = InferSchemaType<typeof inventorySchema> & {
+  _id: Types.ObjectId;
+};
 
 //Export the model
 export default mongoose.model(DOCUMENT_NAME, inventorySchema);

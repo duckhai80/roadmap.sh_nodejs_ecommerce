@@ -1,5 +1,5 @@
-import { PRODUCT_TYPE } from "@/constants";
-import mongoose, { InferSchemaType, Schema } from "mongoose";
+import { ProductType } from "@/constants";
+import mongoose, { InferSchemaType, Schema, Types } from "mongoose";
 import slugify from "slugify";
 
 const DOCUMENT_NAME = "Product";
@@ -17,9 +17,9 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: [
-        PRODUCT_TYPE.ELECTRONICS,
-        PRODUCT_TYPE.CLOTHING,
-        PRODUCT_TYPE.FURNITURE,
+        ProductType.ELECTRONICS,
+        ProductType.CLOTHING,
+        ProductType.FURNITURE,
       ],
     },
     shopId: { type: Schema.Types.ObjectId, ref: "Shop" },
@@ -52,6 +52,8 @@ productSchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true });
 });
 
-export type Product = InferSchemaType<typeof productSchema>;
+export type Product = InferSchemaType<typeof productSchema> & {
+  _id: Types.ObjectId;
+};
 
 export default mongoose.model(DOCUMENT_NAME, productSchema);

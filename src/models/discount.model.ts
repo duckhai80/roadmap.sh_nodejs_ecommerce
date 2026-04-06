@@ -1,7 +1,12 @@
-import mongoose, { InferSchemaType, Schema } from "mongoose";
+import mongoose, { InferSchemaType, Schema, Types } from "mongoose";
 
 const DOCUMENT_NAME = "Discount";
 const COLLECTION_NAME = "discounts";
+
+export enum ApplyTo {
+  ALL = "all",
+  SPECIFIC = "specific",
+}
 
 // Declare the Schema of the Mongo model
 const discountSchema = new mongoose.Schema(
@@ -11,7 +16,7 @@ const discountSchema = new mongoose.Schema(
     description: { type: String },
     type: {
       type: String,
-      enum: ["fixedAmound", "percentage"],
+      enum: ["fixedAmount", "percentage"],
       required: true,
       default: "fixedAmount",
     }, // or percentage
@@ -34,7 +39,9 @@ const discountSchema = new mongoose.Schema(
   { collection: COLLECTION_NAME, timestamps: true },
 );
 
-export type Discount = InferSchemaType<typeof discountSchema>;
+export type Discount = InferSchemaType<typeof discountSchema> & {
+  _id: Types.ObjectId;
+};
 
 //Export the model
 export default mongoose.model(DOCUMENT_NAME, discountSchema);

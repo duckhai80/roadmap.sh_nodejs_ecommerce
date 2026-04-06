@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 import inventoryModel from "../inventory.model";
+import { convertToObjectId } from "@/utils";
 
 export const createInventory = async ({
   productId,
@@ -7,14 +8,14 @@ export const createInventory = async ({
   stock,
   location = "unknown",
 }: {
-  productId: string;
-  shopId: string;
+  productId: string | Types.ObjectId;
+  shopId: string | Types.ObjectId;
   stock: number;
   location?: string;
 }) => {
   return await inventoryModel.create({
-    productId: new Types.ObjectId(productId),
-    shopId: new Types.ObjectId(shopId),
+    productId: convertToObjectId(productId),
+    shopId: convertToObjectId(shopId),
     stock,
     location,
   });

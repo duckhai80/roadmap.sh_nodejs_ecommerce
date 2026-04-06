@@ -1,4 +1,4 @@
-import apiKeyModel from "@/models/apiKey.model";
+import { apiKeyModel } from "@/models";
 
 class ApiKeyService {
   static findById = async (key: string) => {

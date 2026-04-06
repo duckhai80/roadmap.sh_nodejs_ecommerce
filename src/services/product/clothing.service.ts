@@ -1,4 +1,4 @@
-import { PRODUCT_TYPE } from "@/constants";
+import { ProductType } from "@/constants";
 import { BadRequestError } from "@/core";
 import { clothingModel, updateProduct } from "@/models";
 import { removeUndefinedNullObject, updateNestedObjectPatch } from "@/utils";
@@ -38,4 +38,4 @@ export class ClothingService extends ProductService {
   }
 }
 
-ProductFactory.registerProductType(PRODUCT_TYPE.CLOTHING, ClothingService);
+ProductFactory.registerProductType(ProductType.CLOTHING, ClothingService);

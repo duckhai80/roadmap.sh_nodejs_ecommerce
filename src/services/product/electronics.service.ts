@@ -1,4 +1,4 @@
-import { PRODUCT_TYPE } from "@/constants";
+import { ProductType } from "@/constants";
 import { BadRequestError } from "@/core";
 import { electronicsModel, updateProduct } from "@/models";
 import { removeUndefinedNullObject, updateNestedObjectPatch } from "@/utils";
@@ -38,7 +38,4 @@ export class ElectronicsService extends ProductService {
   }
 }
 
-ProductFactory.registerProductType(
-  PRODUCT_TYPE.ELECTRONICS,
-  ElectronicsService,
-);
+ProductFactory.registerProductType(ProductType.ELECTRONICS, ElectronicsService);

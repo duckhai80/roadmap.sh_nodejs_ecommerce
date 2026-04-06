@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose, { InferSchemaType, Types } from "mongoose";
 
 const DOCUMENT_NAME = "ApiKey";
 const COLLECTION_NAME = "apikeys";
@@ -26,6 +26,8 @@ const apiKeySchema = new mongoose.Schema(
   },
 );
 
-export type ApiKey = InferSchemaType<typeof apiKeySchema>;
+export type ApiKey = InferSchemaType<typeof apiKeySchema> & {
+  _id: Types.ObjectId;
+};
 
 export default mongoose.model(DOCUMENT_NAME, apiKeySchema);

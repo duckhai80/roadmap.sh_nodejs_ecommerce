@@ -1,13 +1,18 @@
-import { formatSelectData, formatUnselectData } from "@/utils";
-import { Model, Types } from "mongoose";
+import {
+  convertToObjectId,
+  formatSelectData,
+  formatUnselectData,
+} from "@/utils";
+import { Model, QueryFilter } from "mongoose";
 import { productModel } from "../product";
+import { Product } from "../product/product.model";
 
 export const queryProducts = async ({
   filter,
   limit,
   skip,
 }: {
-  filter: any;
+  filter: QueryFilter<Product>;
   limit: number;
   skip: number;
 }) => {
@@ -42,7 +47,7 @@ export const findAllProducts = async ({
   sort,
   select,
 }: {
-  filter: any;
+  filter: QueryFilter<Product>;
   limit: number;
   page: number;
   sort: string;
@@ -82,12 +87,12 @@ export const updateProduct = async ({
   isNew = true,
 }: {
   productId: string;
-  payload: any;
+  payload: QueryFilter<Product>;
   model: Model<any>;
   isNew?: boolean;
 }) => {
   return await model
-    .findByIdAndUpdate(new Types.ObjectId(productId), payload, {
+    .findByIdAndUpdate(convertToObjectId(productId), payload, {
       new: isNew,
     })
     .lean();
@@ -98,7 +103,7 @@ export const findAllDraftProducts = async ({
   limit,
   skip,
 }: {
-  filter: any;
+  filter: QueryFilter<Product>;
   limit: number;
   skip: number;
 }) => {
@@ -110,7 +115,7 @@ export const findAllPublishedProducts = async ({
   limit,
   skip,
 }: {
-  filter: any;
+  filter: QueryFilter<Product>;
   limit: number;
   skip: number;
 }) => {
@@ -125,8 +130,8 @@ export const publishProduct = async ({
   productId: string;
 }) => {
   const foundShop = await productModel.findOne({
-    shopId: new Types.ObjectId(shopId),
-    _id: new Types.ObjectId(productId),
+    shopId: convertToObjectId(shopId),
+    _id: convertToObjectId(productId),
   });
 
   if (!foundShop) return null;
@@ -147,8 +152,8 @@ export const unpublishProduct = async ({
   productId: string;
 }) => {
   const foundShop = await productModel.findOne({
-    shopId: new Types.ObjectId(shopId),
-    _id: new Types.ObjectId(productId),
+    shopId: convertToObjectId(shopId),
+    _id: convertToObjectId(productId),
   });
 
   if (!foundShop) return null;

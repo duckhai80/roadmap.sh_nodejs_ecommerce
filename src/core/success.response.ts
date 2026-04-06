@@ -1,10 +1,10 @@
 import { ReasonPhrase, StatusCode } from "@/constants";
 import { Response } from "express";
 
-export class SuccessResponse {
+export class SuccessResponse<T> {
   message: string;
   status: number;
-  metadata: any;
+  metadata: T;
 
   constructor({
     message,
@@ -15,7 +15,7 @@ export class SuccessResponse {
     message: string;
     status: number;
     reasonPhrase?: string;
-    metadata: any;
+    metadata: T;
   }) {
     this.message = message ? message : reasonPhrase;
     this.status = status;
@@ -27,8 +27,8 @@ export class SuccessResponse {
   }
 }
 
-export class OK extends SuccessResponse {
-  constructor({ message, metadata }: { message: string; metadata: any }) {
+export class OK<T> extends SuccessResponse<T> {
+  constructor({ message, metadata }: { message: string; metadata: T }) {
     super({
       message,
       status: StatusCode.OK,
@@ -38,7 +38,7 @@ export class OK extends SuccessResponse {
   }
 }
 
-export class CREATED extends SuccessResponse {
+export class CREATED<T> extends SuccessResponse<T> {
   options: {};
 
   constructor({
@@ -47,7 +47,7 @@ export class CREATED extends SuccessResponse {
     options = {},
   }: {
     message: string;
-    metadata: any;
+    metadata: T;
     options: {};
   }) {
     super({

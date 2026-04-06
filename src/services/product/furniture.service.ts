@@ -1,4 +1,4 @@
-import { PRODUCT_TYPE } from "@/constants";
+import { ProductType } from "@/constants";
 import { BadRequestError } from "@/core";
 import { furnitureModel, updateProduct } from "@/models";
 import { removeUndefinedNullObject, updateNestedObjectPatch } from "@/utils";
@@ -37,4 +37,4 @@ export class FurnitureService extends ProductService {
   }
 }
 
-ProductFactory.registerProductType(PRODUCT_TYPE.FURNITURE, FurnitureService);
+ProductFactory.registerProductType(ProductType.FURNITURE, FurnitureService);

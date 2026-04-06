@@ -1,4 +1,4 @@
-import { PRODUCT_TYPE } from "@/constants";
+import { ProductType } from "@/constants";
 import { BadRequestError } from "@/core";
 import {
   createInventory,
@@ -12,8 +12,10 @@ import {
   unpublishProduct,
   updateProduct,
 } from "@/models";
+import { Product } from "@/models/product/product.model";
 import { updateNestedObjectPatch } from "@/utils";
-import { Types } from "mongoose";
+import { Model, QueryFilter, Types } from "mongoose";
+import { convertToObjectId } from "./../../utils/dataFormat.util";
 
 interface ProductPayload {
   name: string;
@@ -63,10 +65,10 @@ export abstract class ProductService {
 
     if (newProduct) {
       await createInventory({
-        productId: newProduct._id.toString(),
-        shopId: this.shopId!.toString(),
+        productId: newProduct._id,
+        shopId: this.shopId!,
         stock: this.quantity,
-        location: this.attributes.location,
+        location: this.attributes?.location,
       });
     }
 
@@ -89,7 +91,7 @@ export abstract class ProductService {
     page = 1,
     sort = "ctime",
   }: {
-    filter: any;
+    filter: QueryFilter<Product>;
     limit?: number;
     page?: number;
     sort?: string;
@@ -118,7 +120,10 @@ export abstract class ProductService {
     limit?: number;
     skip?: number;
   }) {
-    const filter = { shopId, isDraft: true };
+    const filter: QueryFilter<Product> = {
+      shopId: convertToObjectId(shopId),
+      isDraft: true,
+    };
 
     return await findAllDraftProducts({ filter, limit, skip });
   }
@@ -133,7 +138,10 @@ export abstract class ProductService {
     limit?: number;
     skip?: number;
   }) {
-    const filter = { shopId, isPublished: true };
+    const filter: QueryFilter<Product> = {
+      shopId: convertToObjectId(shopId),
+      isPublished: true,
+    };
 
     return await findAllPublishedProducts({ filter, limit, skip });
   }
@@ -166,18 +174,18 @@ export abstract class ProductService {
   }
 }
 
-type ProductServiceConstructor = new (payload: ProductPayload) => {
-  create(): Promise<any>;
-  update(productId: string): Promise<any>;
+export type ProductServiceConstructor = new (payload: ProductPayload) => {
+  create(): Promise<Product>;
+  update(productId: string): Promise<Product>;
 };
 
 export class ProductFactory {
   /* Use simple factory pattern */
-  // static async create(type: PRODUCT_TYPE, payload: Product) {
+  // static async create(type: ProductType, payload: Product) {
   //   switch (type) {
-  //     case PRODUCT_TYPE.CLOTHING:
+  //     case ProductType.CLOTHING:
   //       return new ClothingService(payload).create();
-  //     case PRODUCT_TYPE.ELECTRONICS:
+  //     case ProductType.ELECTRONICS:
   //       return new ElectronicsService(payload).create();
   //     default:
   //       throw new BadRequestError("Invalid product type");
@@ -195,7 +203,7 @@ export class ProductFactory {
     ProductFactory.productRegistry.set(type, classRef);
   }
 
-  static create(type: PRODUCT_TYPE, payload: ProductPayload) {
+  static create(type: ProductType, payload: ProductPayload) {
     const productTypeClass = ProductFactory.productRegistry.get(type);
 
     if (!productTypeClass) throw new BadRequestError(`Invalid type: ${type}`);
@@ -203,11 +211,7 @@ export class ProductFactory {
     return new productTypeClass(payload).create();
   }
 
-  static update(
-    type: PRODUCT_TYPE,
-    productId: string,
-    payload: ProductPayload,
-  ) {
+  static update(type: ProductType, productId: string, payload: ProductPayload) {
     const productTypeClass = ProductFactory.productRegistry.get(type);
 
     if (!productTypeClass) throw new BadRequestError(`Invalid type: ${type}`);

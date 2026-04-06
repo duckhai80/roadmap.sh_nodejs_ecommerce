@@ -1,4 +1,18 @@
+import { BadRequestError } from "@/core";
 import _ from "lodash";
+import { Types } from "mongoose";
+
+export const convertToObjectId = (id: string | Types.ObjectId) => {
+  if (!Types.ObjectId.isValid(id)) {
+    throw new BadRequestError(`Invalid ObjectId: ${id}`);
+  }
+
+  if (id instanceof Types.ObjectId) {
+    return id;
+  }
+
+  return new Types.ObjectId(id);
+};
 
 export const getInfoData = ({
   object = {},
