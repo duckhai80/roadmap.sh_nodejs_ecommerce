@@ -1,5 +1,6 @@
 import express from "express";
 import accessRouter from "./access";
+import discountRouter from "./discount";
 import productRouter from "./product";
 
 const router = express.Router();
@@ -11,6 +12,7 @@ router.get("/", (req, res, next) => {
 });
 
 router.use("/v1/api/products", productRouter);
+router.use("/v1/api/discounts", discountRouter);
 router.use("/v1/api", accessRouter);
 
 export default router;

@@ -8,14 +8,15 @@
 */
 
 import { BadRequestError, NotFoundError } from "@/core";
-import { discountModel, findAll, findAllProducts } from "@/models";
-import { ApplyTo, Discount } from "@/models/discount.model";
+import { discountModel, findAll, findAllProducts, findOne } from "@/models";
+import { ApplyTo, Discount, DiscountType } from "@/models/discount.model";
 import { Product } from "@/models/product/product.model";
 import { findAllDiscountByShopIdAndCode } from "@/models/repositories/discount.repo";
+import { QueryParams } from "@/types";
 import { convertToObjectId } from "@/utils";
 
 export class DiscountService {
-  // Generate discount code
+  // Generate discount code (admin/shop)
   static async create(payload: Discount) {
     const {
       shopId,
@@ -33,11 +34,8 @@ export class DiscountService {
       usersUsed,
       isActive,
       appliesTo,
+      appliesToProduct,
     } = payload;
-
-    if (new Date() < new Date(startDate) || new Date() > new Date(endDate)) {
-      throw new BadRequestError("Discount code is expired or not yet active");
-    }
 
     if (new Date(startDate) > new Date(endDate)) {
       throw new BadRequestError("Start date must be before end date");
@@ -71,7 +69,7 @@ export class DiscountService {
 
       isActive,
       appliesTo,
-      appliesToProduct: appliesTo === ApplyTo.ALL ? [] : ["productId"],
+      appliesToProduct: appliesTo === ApplyTo.ALL ? [] : appliesToProduct,
     });
 
     return newDiscount;
@@ -79,22 +77,63 @@ export class DiscountService {
 
   static async update() {}
 
+  static async delete({ shopId, code }: { shopId: string; code: string }) {
+    await discountModel.findOneAndDelete({
+      shopId: convertToObjectId(shopId),
+      code,
+    });
+
+    return null;
+  }
+
+  static async cancel({
+    shopId,
+    code,
+    userId,
+  }: {
+    shopId: string;
+    code: string;
+    userId?: string;
+  }) {
+    const foundDiscount = await findAllDiscountByShopIdAndCode({
+      shopId: convertToObjectId(shopId),
+      code,
+    });
+
+    if (!foundDiscount) throw new NotFoundError("Discount code not found");
+
+    const resultCancel = await discountModel.findByIdAndUpdate(
+      foundDiscount._id,
+      {
+        $pull: {
+          usersUsed: userId,
+        },
+        $inc: {
+          maxUses: 1,
+          usesCount: -1,
+        },
+      },
+    );
+
+    return resultCancel;
+  }
+
   // Get all available products with code
   static async findAllProducts({
     shopId,
     userId,
     code,
-    limit,
-    page,
+    limit = 50,
+    page = 1,
   }: {
     shopId: string;
     userId?: string;
     code: string;
-    limit: number;
-    page: number;
-  }) {
+    // limit: number;
+    // page: number;
+  } & QueryParams<Discount>) {
     const foundDiscount = await findAllDiscountByShopIdAndCode({
-      shopId: shopId!,
+      shopId: convertToObjectId(shopId),
       code,
     });
 
@@ -136,15 +175,10 @@ export class DiscountService {
   // Get all discounts of shop
   static async findAllByShopId({
     shopId,
-    page,
-    limit,
-    sort,
-  }: {
-    shopId: string;
-    page: number;
-    limit: number;
-    sort: string;
-  }) {
+    page = 1,
+    limit = 50,
+    sort = "ctime",
+  }: QueryParams<Discount>) {
     const discounts = await findAll({
       model: discountModel,
       filter: {
@@ -153,9 +187,88 @@ export class DiscountService {
       limit,
       page,
       sort,
-      unselect: ["__v", "shopId"],
+      select: ["code", "name"],
+      unselect: ["_id"],
     });
 
     return discounts;
   }
+
+  // get discount amount
+  static async calculateDiscountAmount({
+    shopId,
+    userId,
+    code,
+    products,
+  }: {
+    shopId: string;
+    userId: string;
+    code: string;
+    products: Product[];
+  }) {
+    const foundDiscount = await findOne({
+      model: discountModel,
+      filter: {
+        shopId: convertToObjectId(shopId),
+        code,
+      },
+    });
+
+    if (!foundDiscount) {
+      throw new NotFoundError("Discount code is not found");
+    }
+
+    const {
+      type,
+      startDate,
+      endDate,
+      value,
+      maxUses,
+      maxUsesPerUser,
+      minOrderValue,
+      usersUsed,
+      isActive,
+    } = foundDiscount;
+
+    if (new Date() < new Date(startDate) || new Date() > new Date(endDate))
+      throw new NotFoundError("Discount code is expired or not yet active");
+    if (!maxUses) throw new NotFoundError("Discount code is out");
+    if (!isActive) throw new NotFoundError("Discount code is not active");
+
+    // Check the min value of order
+    let totalOrderValue = 0;
+
+    if (minOrderValue > 0) {
+      totalOrderValue = products.reduce(
+        (acc, product) => acc + product.price * product.quantity,
+        0,
+      );
+
+      if (totalOrderValue < minOrderValue)
+        throw new NotFoundError(
+          `Discount requires a minimum value of ${minOrderValue}`,
+        );
+    }
+
+    if (maxUsesPerUser > 0) {
+      const userUsesCount = usersUsed.find((user) => user.userId === userId);
+
+      if (userUsesCount === 1) {
+      }
+    }
+
+    // Calculate discount amount
+    const discountAmount =
+      type === DiscountType.FIXED_AMOUNT
+        ? value
+        : totalOrderValue * (value / 100);
+
+    return {
+      totalOrderValue,
+      discountAmount,
+      totalPrice: totalOrderValue - discountAmount,
+    };
+  }
 }
+
+export default DiscountService;

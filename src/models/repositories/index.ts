@@ -1,3 +1,4 @@
+import { QueryParams } from "@/types";
 import { formatSelectData, formatUnselectData } from "@/utils";
 import { Model, QueryFilter } from "mongoose";
 
@@ -7,33 +8,38 @@ export * from "./product.repo";
 export const findAll = async <T>({
   model,
   filter,
-  limit,
-  page,
-  sort,
+  limit = 50,
+  page = 1,
+  sort = "ctime",
   select,
   unselect,
 }: {
   model: Model<T>;
-  filter: QueryFilter<T>;
-  limit: number;
-  page: number;
-  sort: string;
   select?: string[];
   unselect?: string[];
-}) => {
+} & QueryParams<T>) => {
   const skip = (page - 1) * limit;
   const sortBy: { [key: string]: 1 | -1 } =
     sort === "ctime" ? { _id: -1 } : { _id: 1 };
 
-  let query = model.find(filter).limit(limit).skip(skip).sort(sortBy);
+  return await model
+    .find(filter)
+    .limit(limit)
+    .skip(skip)
+    .sort(sortBy)
+    .select({
+      ...formatSelectData(select),
+      ...formatUnselectData(unselect),
+    })
+    .lean();
+};
 
-  if (select) {
-    query = query.select(formatSelectData());
-  }
-
-  if (unselect) {
-    query = query.select(formatUnselectData());
-  }
-
-  return await query.lean();
+export const findOne = async <T>({
+  model,
+  filter,
+}: {
+  model: Model<T>;
+  filter: QueryFilter<T>;
+}) => {
+  return await model.findOne(filter).lean();
 };

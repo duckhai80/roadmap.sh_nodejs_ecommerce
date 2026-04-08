@@ -7,7 +7,7 @@ class AccessController {
 
   handleRefreshToken = async (req: Request, res: Response) => {
     return new OK({
-      message: "Refresh token success!",
+      message: "Token refreshed successfully!",
       metadata: await AccessService.handleRefreshToken(
         req.keyStore!,
         req.shop,
@@ -18,14 +18,14 @@ class AccessController {
 
   login = async (req: Request, res: Response) => {
     return new OK({
-      message: "Login success!",
+      message: "Logged in successfully!",
       metadata: await AccessService.login(req.body),
     }).send(res);
   };
 
   signup = async (req: Request, res: Response) => {
     return new CREATED({
-      message: "Register success!",
+      message: "Registered successfully!",
       metadata: await AccessService.signup(req.body),
       // Mock options property
       options: {
@@ -40,7 +40,7 @@ class AccessController {
     if (!keyStore) throw new AuthFailureError("Keystore not found");
 
     return new OK({
-      message: "Logout success!",
+      message: "Logged out successfully!",
       metadata: await AccessService.logout(req.keyStore!),
     }).send(res);
   };

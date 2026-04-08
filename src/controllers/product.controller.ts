@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 class ProductController {
   create = async (req: Request, res: Response) => {
     return new SuccessResponse({
-      message: "Create new product success",
+      message: "Product created successfully",
       status: 201,
       metadata: await ProductFactory.create(req.body.type, {
         ...req.body,
@@ -16,7 +16,7 @@ class ProductController {
 
   update = async (req: Request, res: Response) => {
     return new SuccessResponse({
-      message: "Update product success",
+      message: "Product updated successfully",
       status: 200,
       metadata: await ProductFactory.update(
         req.body.type,
@@ -31,7 +31,7 @@ class ProductController {
 
   findAll = async (req: Request, res: Response) => {
     return new SuccessResponse({
-      message: "Get all products success",
+      message: "Products fetched successfully",
       status: 200,
       metadata: await ProductService.findAll({
         filter: req.query,
@@ -41,7 +41,7 @@ class ProductController {
 
   findOne = async (req: Request, res: Response) => {
     return new SuccessResponse({
-      message: "Get product success",
+      message: "Product fetched successfully",
       status: 200,
       metadata: await ProductService.findOne({
         productId: req.params.productId as string,
@@ -51,7 +51,7 @@ class ProductController {
 
   findAllDrafts = async (req: Request, res: Response) => {
     return new SuccessResponse({
-      message: "Found draft products success",
+      message: "Draft products fetched successfully",
       status: 200,
       metadata: await ProductService.findAllDrafts({
         shopId: req.shop.shopId,
@@ -61,7 +61,7 @@ class ProductController {
 
   findAllPublished = async (req: Request, res: Response) => {
     return new SuccessResponse({
-      message: "Found published products success",
+      message: "Published products fetched successfully",
       status: 200,
       metadata: await ProductService.findAllPublished({
         shopId: req.shop.shopId,
@@ -71,7 +71,7 @@ class ProductController {
 
   publish = async (req: Request, res: Response) => {
     return new SuccessResponse({
-      message: "Publish product success",
+      message: "Product published successfully",
       status: 200,
       metadata: await ProductService.publish({
         productId: req.params.productId as string,
@@ -82,7 +82,7 @@ class ProductController {
 
   unpublish = async (req: Request, res: Response) => {
     return new SuccessResponse({
-      message: "Unpublish product success",
+      message: "Product unpublished successfully",
       status: 200,
       metadata: await ProductService.unpublish({
         productId: req.params.productId as string,
@@ -93,7 +93,7 @@ class ProductController {
 
   search = async (req: Request, res: Response) => {
     return new SuccessResponse({
-      message: "Found search products success",
+      message: "Search products successfully",
       status: 200,
       metadata: await ProductService.search(req.params.keySearch as string),
     }).send(res);

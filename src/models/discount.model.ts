@@ -8,6 +8,11 @@ export enum ApplyTo {
   SPECIFIC = "specific",
 }
 
+export enum DiscountType {
+  FIXED_AMOUNT = "fixedAmount",
+  PERCENTAGE = "percentage",
+}
+
 // Declare the Schema of the Mongo model
 const discountSchema = new mongoose.Schema(
   {
@@ -16,9 +21,9 @@ const discountSchema = new mongoose.Schema(
     description: { type: String },
     type: {
       type: String,
-      enum: ["fixedAmount", "percentage"],
+      enum: DiscountType,
       required: true,
-      default: "fixedAmount",
+      default: DiscountType.FIXED_AMOUNT,
     }, // or percentage
     value: { type: Number, required: true }, // 100000 or 10%
     code: { type: String, required: true },
@@ -33,8 +38,8 @@ const discountSchema = new mongoose.Schema(
     usersUsed: { type: Array, default: [] }, // users who used
 
     isActive: { type: Boolean, default: true },
-    appliesTo: { type: String, required: true, enum: ["all", "specific"] },
-    appliesToProduct: { type: Array, default: [] },
+    appliesTo: { type: String, required: true, enum: ApplyTo },
+    appliesToProduct: { type: [String], default: [] },
   },
   { collection: COLLECTION_NAME, timestamps: true },
 );
