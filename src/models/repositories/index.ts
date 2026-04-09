@@ -1,7 +1,14 @@
 import { QueryParams } from "@/types";
 import { formatSelectData, formatUnselectData } from "@/utils";
-import { Model, QueryFilter } from "mongoose";
+import {
+  Model,
+  PopulateOptions,
+  QueryFilter,
+  QueryOptions,
+  UpdateQuery,
+} from "mongoose";
 
+export * from "./discount.repo";
 export * from "./inventory.repo";
 export * from "./product.repo";
 
@@ -37,9 +44,51 @@ export const findAll = async <T>({
 export const findOne = async <T>({
   model,
   filter,
+  populateOptions,
 }: {
   model: Model<T>;
   filter: QueryFilter<T>;
+  populateOptions?: PopulateOptions[];
 }) => {
-  return await model.findOne(filter).lean();
+  const query = model.findOne(filter);
+
+  if (populateOptions) {
+    query.populate(populateOptions);
+  }
+
+  return await query.lean();
+};
+
+export const create = async <T>({
+  model,
+  document,
+}: {
+  model: Model<T>;
+  document: T;
+}) => {
+  return await model.create(document);
+};
+
+export const update = async <T>({
+  model,
+  filterQuery,
+  updateQuery,
+  queryOptions,
+}: {
+  model: Model<T>;
+  filterQuery: QueryFilter<T>;
+  updateQuery: UpdateQuery<T>;
+  queryOptions?: QueryOptions<T>;
+}) => {
+  return await model.findOneAndUpdate(filterQuery, updateQuery, queryOptions);
+};
+
+export const deleteOne = async <T>({
+  model,
+  filterQuery,
+}: {
+  model: Model<T>;
+  filterQuery: QueryFilter<T>;
+}) => {
+  return await model.deleteOne(filterQuery);
 };

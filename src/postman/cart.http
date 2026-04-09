@@ -1,0 +1,76 @@
+@baseUrl=http://localhost:3056/v1/api/carts
+@authorization=Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2OWMzYjlhYmEyMmM3OTM5OTI4Yzk2M2YiLCJlbWFpbCI6InNob3B0aXBqczA1QGdtYWlsLmNvbSIsImlhdCI6MTc3NTYyODA2NCwiZXhwIjoxNzc1ODAwODY0fQ.pDP1TY3Q-NdlJZlpcqut3xKW8KaERaHpaDXJ3g8afHI02HqJCAjxG3VtrUdikNzHOi1C29dZsYLeM8MXj6QD1EWIQeF7woWQwhGRKtkmZR8bL0QEa_yUBN-LpPFKz65iJ0Vcj-oWlsDFYy311ikbnBG2PW90tGOv_tJ7uals0K3YIx_0H4e4j-36QI_xTzf33ehSTFMgwPHdtLRa7yHV8ZJ1D7bIDrlSxjQ8V-yRm5JY963wlWmpRJH6VoLNThbVQYGaZT6j_CSdsuONtI4U11XmazoE3dlois6n_zEfAOZVvNXtAVlPmTVN5EA6_73m5pxe4_qXDjoboqXeFTwWugpTKWVUnkawtE0qojP-SjlLusY6XvbzBmUn_H-StWdVFR06RzCWG7J3_OvXOvM5pR7F_fnLgvwzJaY7b1Zhra59wg1kv4tbrbojUv9kdga6vGo40_D7zH5wPcVVGbRxktpNcYosqLHR0_M_UgH5x16heWAA4SZ_ok0StNwWiqn_Z_LKM7Q5jReNrWl9A_Mtyfjl9eYPNtRKvXkaTNutQPZQwkS4GE9ZhqE_s2mKmJZkcuCmbiM1j4xPTdAXInZ5SGMubNfOvf3oqQbPJAL376MWI-Q4ox8GubV59no0GFuMlRzX8gOzYNqTUkjQ7-Bxm5Q078Jv7h9Mja4Q48d38OE
+@x-api-key=x-api-key: 3a07e364bdae7a7f44adc398e3c78388f06835be51d88b07904af7d293c8a5dffbdb5c5aa4e90a85214dbb98a09ce1e9f9032d4fea62fcaa9bac44dc2f915026
+@x-client-id=x-client-id: 69c3b9aba22c7939928c963f
+
+### Get cart
+GET {{baseUrl}}?userId=1001
+{{authorization}}
+{{x-api-key}}
+{{x-client-id}}
+
+### Add to cart
+POST {{baseUrl}}/
+Content-Type: application/json
+{{authorization}}
+{{x-api-key}}
+{{x-client-id}}
+
+{
+  "userId": "1001",
+  "product": {
+    "productId": "69cfec6ca43bb352916246b2",
+    "shopId": "69c3b9aba22c7939928c963f",
+    "name": "New jeanssssssss",
+    "price": 50,
+    "quantity": 5
+  }
+}
+
+# {
+#   "userId": "1001",
+#   "product": {
+#     "productId": "69d0095fc2305ae916641efc",
+#     "shopId": "69c3b9aba22c7939928c963f",
+#     "name": "New jeans",
+#     "price": 50,
+#     "quantity": 5
+#   }
+# }
+
+### Update product quantity
+POST {{baseUrl}}/update-product
+Content-Type: application/json
+{{authorization}}
+{{x-api-key}}
+{{x-client-id}}
+
+{
+  "userId": "1001",
+  "cartOrders": [
+    {
+      "products": [
+        {
+          "shopId": "69c3b9aba22c7939928c963f",
+          "productId": "69d0095fc2305ae916641efc",
+          "price": 50,
+          "quantity": 4,
+          "oldQuantity": 12
+        }
+      ],
+      "version": 1
+    }
+  ]
+}
+
+### Delete product
+DELETE {{baseUrl}}/delete-product
+Content-Type: application/json
+{{authorization}}
+{{x-api-key}}
+{{x-client-id}}
+
+{
+  "userId": "1001",
+  "productId": "69d0095fc2305ae916641efc"
+}

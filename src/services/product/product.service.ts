@@ -101,7 +101,7 @@ export abstract class ProductService {
       limit,
       page,
       sort,
-      select: ["name", "price", "thumbnail"],
+      select: ["name", "price", "thumbnail", "shopId"],
     });
   }
 

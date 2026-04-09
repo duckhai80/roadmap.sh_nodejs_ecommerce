@@ -8,10 +8,15 @@
 */
 
 import { BadRequestError, NotFoundError } from "@/core";
-import { discountModel, findAll, findAllProducts, findOne } from "@/models";
+import {
+  discountModel,
+  findAll,
+  findAllDiscountByShopIdAndCode,
+  findAllProducts,
+  findOne,
+} from "@/models";
 import { ApplyTo, Discount, DiscountType } from "@/models/discount.model";
 import { Product } from "@/models/product/product.model";
-import { findAllDiscountByShopIdAndCode } from "@/models/repositories/discount.repo";
 import { QueryParams } from "@/types";
 import { convertToObjectId } from "@/utils";
 

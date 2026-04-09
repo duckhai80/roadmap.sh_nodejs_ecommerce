@@ -18,5 +18,3 @@ export const findAllDiscountByShopIdAndCode = async ({
 
   return foundDiscount;
 };
-
-// export const findAllDiscount = async ({
