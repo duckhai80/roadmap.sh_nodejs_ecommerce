@@ -1,0 +1,53 @@
+@baseUrl=http://localhost:3056/v1/api/checkouts
+
+### Checkout review
+POST {{baseUrl}}/review
+Content-Type: application/json
+x-api-key: {{$dotenv X_API_KEY}}
+
+{
+  "userId": "1001",
+  "cartId": "69d7372012a94d21f252d94d",
+  "shopOrderCheckouts": [
+    {
+      "shopId": "69c3b6ce0c5ac39c2105ebe0",
+      "discount": [],
+      "products": [
+        {
+          "productId": "69d0095fc2305ae916641efc",
+          "price": 120000,
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "shopId": "69c3b6ce0c5ac39c2105ebe0",
+      "discount": [
+        {
+          "shopId": "69c3b6ce0c5ac39c2105ebe0",
+          "discountId": "69d79fe015a9235e0ee40066",
+          "productId": "69d79d89b5e2578d08537e90",
+          "code": "SHOP-1133"
+        },
+        {
+          "shopId": "69c3b6ce0c5ac39c2105ebe0",
+          "discountId": "69d79fe015a9235e0ee40066",
+          "productId": "69d7b22815a9235e0ee4006c",
+          "code": "SHOP-1133"
+        }
+      ],
+      "products": [
+        {
+          "productId": "69d7b22815a9235e0ee4006c",
+          "price": 500000,
+          "quantity": 10
+        },
+        {
+          "productId": "69d79d89b5e2578d08537e90",
+          "price": 150000,
+          "quantity": 5
+        }
+      ]
+    }
+  ]
+}

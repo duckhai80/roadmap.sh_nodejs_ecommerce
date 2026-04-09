@@ -1,11 +1,9 @@
 @baseUrl=http://localhost:3056/v1/api
-@x-api-key={{x-api-key}}
-@x-client-id=x-client-id: 69c3b9aba22c7939928c963f
 
 ### Sign up
 POST {{baseUrl}}/shop/signup
 Content-Type: application/json
-{{x-api-key}}
+x-api-key: {{$dotenv X_API_KEY}}
 
 {
   "name": "Shop tips",
@@ -16,10 +14,10 @@ Content-Type: application/json
 ### Login
 POST {{baseUrl}}/shop/login
 Content-Type: application/json
-{{x-api-key}}
+x-api-key: {{$dotenv X_API_KEY}}
 
 {
-  "email": "shoptipjs05@gmail.com",
+  "email": "shoptipjs03@gmail.com",
   "password": "abc123",
   "refreshToken": ""
 }
@@ -28,14 +26,14 @@ Content-Type: application/json
 POST {{baseUrl}}/shop/logout
 Content-Type: application/json
 authoro
-{{x-api-key}}
-{{x-client-id}}
+x-api-key: {{$dotenv X_API_KEY}}
+x-client-id: {{$dotenv X_CLIENT_ID}}
 
 ### Refresh token
 POST {{baseUrl}}/shop/handle-refresh-token
 Content-Type: application/json
-{{x-api-key}}
-{{x-client-id}}
+x-api-key: {{$dotenv X_API_KEY}}
+x-client-id: {{$dotenv X_CLIENT_ID}}
 x-refresh-token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaG9wSWQiOiI2OWMzYjlhYmEyMmM3OTM5OTI4Yzk2M2YiLCJlbWFpbCI6InNob3B0aXBqczA1QGdtYWlsLmNvbSIsImlhdCI6MTc3NDUyMjc2MCwiZXhwIjoxNzc1MTI3NTYwfQ.pJ3zQP6XmIzzGfTw1oxZEN8F0h3FPGMUvdtN2AijFXDl1Q-EenCEHeY8_PCsyxe-RU4dpHDcsjrfercu2BlUDUnIIcuVUm1RJW-HXOTleleKzUoe6by8c6BtLL8F-5b1V_eqG9ZRHllfmgPW4IHfg3RhVwRLZWsN3fSKAlEPSP7ROqQ9Vzm4M4yTJ1RH_pG5WumLG3foDK-_Cdziw9o5x0K0WvQtGKW4Bms0hMH_cUQoTzJeGebgYDlnhiUJ1vH481kJrp95JCnNRtrNVcOedvW67or6J4pMlvWyka4VLXOuCtqqcNWQgrywGOUBF2RwBm8_e0WgXENstr3N4E4ZXWDdmJ4cJg9VTo0-DpH5Eiru9aAyXOWbJGKzgpcJQMQGu0mOGge5XZNUcE9G5tX5U0GYB9q365WghscmO33BGJdbtrzxyVvl_0i6umCpcy7IBi2LRyeerRXPJd1rRQdqeHOoINgzvo5fEWnT9gpXlero291bFO_cVAqDu9NGyLXwLgGZgwarZEyTWNZXIZ4y-rTk8nlYgucUR_jwHBZya5Z0os9TX0qyBqz9vX50UlnfUXLHF_H4OcvetY84vgls6XelDep3PF0mGimP78VwbFHviQjGOcRHShZkRuWrcFxEj8zwhXVNTtfTRhZ82C1T528hh9tQ_BYh3b7kU51p-GI
 
 {

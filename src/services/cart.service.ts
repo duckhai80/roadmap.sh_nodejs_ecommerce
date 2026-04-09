@@ -9,8 +9,8 @@
 
 import { BadRequestError, NotFoundError } from "@/core";
 import { productModel } from "@/models";
-import cartModel, { Cart, CartStatus } from "@/models/cart.model";
-import { CartOrder, CartProduct } from "@/types";
+import cartModel, { Cart } from "@/models/cart.model";
+import { CartOrder, CartProduct, CartStatus } from "@/types";
 import { convertToObjectId } from "@/utils";
 import { QueryFilter, QueryOptions, UpdateQuery } from "mongoose";
 

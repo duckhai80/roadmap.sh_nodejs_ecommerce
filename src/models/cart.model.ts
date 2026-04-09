@@ -1,14 +1,8 @@
-import mongoose, { InferSchemaType, Schema, Types } from "mongoose";
+import { CartStatus } from "@/types";
+import mongoose, { InferSchemaType, Types } from "mongoose";
 
 const DOCUMENT_NAME = "Cart";
 const COLLECTION_NAME = "carts";
-
-export enum CartStatus {
-  ACTIVE = "active",
-  PENDING = "pending",
-  COMPLETED = "completed",
-  CANCELLED = "cancelled",
-}
 
 // Declare the Schema of the Mongo model
 const cartSchema = new mongoose.Schema(

@@ -134,8 +134,6 @@ export class DiscountService {
     shopId: string;
     userId?: string;
     code: string;
-    // limit: number;
-    // page: number;
   } & QueryParams<Discount>) {
     const foundDiscount = await findAllDiscountByShopIdAndCode({
       shopId: convertToObjectId(shopId),
@@ -209,7 +207,7 @@ export class DiscountService {
     shopId: string;
     userId: string;
     code: string;
-    products: Product[];
+    products: Partial<Product>[];
   }) {
     const foundDiscount = await findOne({
       model: discountModel,
@@ -245,7 +243,7 @@ export class DiscountService {
 
     if (minOrderValue > 0) {
       totalOrderValue = products.reduce(
-        (acc, product) => acc + product.price * product.quantity,
+        (acc, product) => acc + product?.price! * product?.quantity!,
         0,
       );
 

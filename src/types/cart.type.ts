@@ -10,3 +10,10 @@ export interface CartProduct {
   quantity: number;
   oldQuantity?: number;
 }
+
+export enum CartStatus {
+  ACTIVE = "active",
+  PENDING = "pending",
+  COMPLETED = "completed",
+  CANCELLED = "cancelled",
+}

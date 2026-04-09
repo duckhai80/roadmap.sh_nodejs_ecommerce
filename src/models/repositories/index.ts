@@ -8,6 +8,7 @@ import {
   UpdateQuery,
 } from "mongoose";
 
+export * from "./cart.repo";
 export * from "./discount.repo";
 export * from "./inventory.repo";
 export * from "./product.repo";

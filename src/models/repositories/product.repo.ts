@@ -66,12 +66,12 @@ export const findAllProducts = async ({
     .lean();
 };
 
-export const findProduct = async ({
+export const findOneProduct = async ({
   productId,
   unselect,
 }: {
   productId: string;
-  unselect: string[];
+  unselect?: string[];
 }) => {
   return await productModel
     .findById(productId)
@@ -164,4 +164,22 @@ export const unpublishProduct = async ({
   const { modifiedCount } = await foundShop.updateOne(foundShop);
 
   return modifiedCount;
+};
+
+export const checkProductsByServer = async (products: any[]) => {
+  return await Promise.all(
+    products.map(async (product) => {
+      const foundProduct = await findOneProduct({
+        productId: product.productId,
+      });
+
+      if (foundProduct) {
+        return {
+          productId: foundProduct._id,
+          price: foundProduct.price,
+          quantity: foundProduct.quantity,
+        };
+      }
+    }),
+  );
 };

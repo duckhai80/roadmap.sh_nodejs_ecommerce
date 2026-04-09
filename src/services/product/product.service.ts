@@ -5,7 +5,7 @@ import {
   findAllDraftProducts,
   findAllProducts,
   findAllPublishedProducts,
-  findProduct,
+  findOneProduct,
   productModel,
   publishProduct,
   searchProducts,
@@ -107,7 +107,7 @@ export abstract class ProductService {
 
   // Find product
   static async findOne({ productId }: { productId: string }) {
-    return await findProduct({ productId, unselect: ["__v"] });
+    return await findOneProduct({ productId, unselect: ["__v"] });
   }
 
   // Find all draft products by shop id
