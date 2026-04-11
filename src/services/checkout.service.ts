@@ -1,54 +1,54 @@
 import { BadRequestError } from "@/core";
 import { checkProductsByServer, findOneCartById } from "@/models";
 import { Product } from "@/models/product/product.model";
-import { ShopOrderCheckout } from "@/types";
+import { ShopCheckoutReview } from "@/types";
 import DiscountService from "./discount.service";
 
 class CheckoutService {
   static async checkoutReview({
     userId,
     cartId,
-    shopOrderCheckouts,
+    shopCheckouts,
   }: {
     userId: string;
     cartId: string;
-    shopOrderCheckouts: ShopOrderCheckout[];
+    shopCheckouts: ShopCheckoutReview[];
   }) {
     const foundCart = await findOneCartById(cartId);
 
     if (!foundCart) throw new BadRequestError("Cart not found");
 
-    const newShopOrderCheckouts = [];
-    const priceCheckout = {
-      totalOrderValue: 0,
+    const resolvedShopCheckouts = [];
+    const checkoutSummary = {
+      totalOrder: 0,
       feeShip: 0,
       totalDiscount: 0,
-      totalCheckout: 0,
+      totalPayment: 0,
     };
 
     // Loop for each shop
-    for (let index = 0; index < shopOrderCheckouts.length; index++) {
+    for (const shopCheckout of shopCheckouts) {
       const {
         shopId,
         discount: shopDiscounts = [],
         products: shopProducts = [],
-      } = shopOrderCheckouts[index]!;
+      } = shopCheckout;
 
       // Check product is available
-      const checkShopProducts = await checkProductsByServer(shopProducts);
+      const checkedShopProducts = await checkProductsByServer(shopProducts);
 
-      if (checkShopProducts.length === 0)
+      if (checkedShopProducts.length === 0)
         throw new BadRequestError("Product not found");
 
       // Calculate shop order value
-      const shopOrderValue = checkShopProducts.reduce((acc, shopProduct) => {
+      const shopOrderValue = checkedShopProducts.reduce((acc, shopProduct) => {
         return acc + shopProduct?.price! * shopProduct?.quantity!;
       }, 0);
 
       // Total order value before process
-      priceCheckout.totalOrderValue += shopOrderValue;
+      checkoutSummary.totalOrder += shopOrderValue;
 
-      const shopOrderCheckout = {
+      const shopCheckoutSummary = {
         shopId,
         discount: shopDiscounts,
         price: shopOrderValue,
@@ -58,31 +58,31 @@ class CheckoutService {
 
       // Calculate discount
       if (shopDiscounts.length > 0) {
-        const { totalOrderValue, discountAmount } =
+        const { discountAmount } =
           await DiscountService.calculateDiscountAmount({
             shopId,
             userId,
             code: shopDiscounts[0]?.code!,
-            products: checkShopProducts! as Partial<Product>[],
+            products: checkedShopProducts! as Partial<Product>[],
           });
 
         // Add discount amount per discount code
-        priceCheckout.totalDiscount += discountAmount;
+        checkoutSummary.totalDiscount += discountAmount;
 
         if (discountAmount) {
-          shopOrderCheckout.priceAppliesDiscount =
+          shopCheckoutSummary.priceAppliesDiscount =
             shopOrderValue - discountAmount;
         }
       }
 
-      priceCheckout.totalCheckout += shopOrderCheckout.priceAppliesDiscount;
-      newShopOrderCheckouts.push(shopOrderCheckout);
+      checkoutSummary.totalPayment += shopCheckoutSummary.priceAppliesDiscount;
+      resolvedShopCheckouts.push(shopCheckoutSummary);
     }
 
     return {
-      shopOrderCheckouts,
-      newShopOrderCheckouts,
-      priceCheckout,
+      shopCheckouts,
+      resolvedShopCheckouts,
+      checkoutSummary,
     };
   }
 }

@@ -1,7 +1,6 @@
 import { checkoutController } from "@/controllers";
-import { checkApiKey } from "@/middlewares";
+import { catchAsync, checkApiKey } from "@/middlewares";
 import express from "express";
-import { catchAsync } from "./../../middlewares/catchAsync.middleware";
 
 const checkoutRouter = express.Router();
 

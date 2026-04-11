@@ -1,11 +1,11 @@
 import { productController } from "@/controllers";
 import {
+  catchAsync,
   checkApiKey,
   checkAuthentication,
   checkPermission,
 } from "@/middlewares";
 import express from "express";
-import { catchAsync } from "./../../middlewares/catchAsync.middleware";
 
 const productRouter = express.Router();
 

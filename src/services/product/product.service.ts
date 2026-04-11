@@ -13,9 +13,8 @@ import {
   updateProduct,
 } from "@/models";
 import { Product } from "@/models/product/product.model";
-import { updateNestedObjectPatch } from "@/utils";
-import { Model, QueryFilter, Types } from "mongoose";
-import { convertToObjectId } from "./../../utils/dataFormat.util";
+import { convertToObjectId, updateNestedObjectPatch } from "@/utils";
+import { QueryFilter, Types } from "mongoose";
 
 interface ProductPayload {
   name: string;

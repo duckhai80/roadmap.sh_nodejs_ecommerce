@@ -8,7 +8,7 @@ export class ErrorResponse extends Error {
 
     this.status = status;
 
-    // Object.setPrototypeOf(this, ErrorResponse.prototype);
+    Object.setPrototypeOf(this, ErrorResponse.prototype);
   }
 }
 

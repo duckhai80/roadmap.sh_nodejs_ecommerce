@@ -1,6 +1,6 @@
+import { convertToObjectId } from "@/utils";
 import { Types } from "mongoose";
 import discountModel from "../discount.model";
-import { convertToObjectId } from "./../../utils/dataFormat.util";
 
 export const findAllDiscountByShopIdAndCode = async ({
   shopId,

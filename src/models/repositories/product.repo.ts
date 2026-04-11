@@ -74,7 +74,7 @@ export const findOneProduct = async ({
   unselect?: string[];
 }) => {
   return await productModel
-    .findById(productId)
+    .findById(convertToObjectId(productId))
     .populate("shopId", "name email -_id")
     .select(formatUnselectData(unselect))
     .lean();

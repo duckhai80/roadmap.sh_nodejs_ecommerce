@@ -48,7 +48,7 @@ export class CREATED<T> extends SuccessResponse<T> {
   }: {
     message: string;
     metadata: T;
-    options: {};
+    options?: {};
   }) {
     super({
       message,

@@ -3,6 +3,7 @@ export { default as cartModel } from "./cart.model";
 export { default as discountModel } from "./discount.model";
 export { default as inventoryModel } from "./inventory.model";
 export { default as keyStoreModel } from "./keyStore.model";
+export { default as orderModel } from "./order.model";
 export * from "./product";
 export * from "./repositories";
 export { default as shopModel } from "./shop.model";

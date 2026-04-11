@@ -27,10 +27,6 @@ class AccessController {
     return new CREATED({
       message: "Registered successfully!",
       metadata: await AccessService.signup(req.body),
-      // Mock options property
-      options: {
-        limit: 10,
-      },
     }).send(res);
   };
 

@@ -1,4 +1,4 @@
-export interface ShopOrderCheckout {
+export interface ShopCheckoutReview {
   shopId: string;
   discount: {
     shopId: string;

@@ -8,7 +8,7 @@ x-api-key: {{$dotenv X_API_KEY}}
 {
   "userId": "1001",
   "cartId": "69d7372012a94d21f252d94d",
-  "shopOrderCheckouts": [
+  "shopCheckouts": [
     {
       "shopId": "69c3b6ce0c5ac39c2105ebe0",
       "discount": [],
