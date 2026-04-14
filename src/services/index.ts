@@ -7,5 +7,6 @@ export { default as InventoryService } from "./inventory.service";
 export { default as KeyStoreService } from "./key-store.service";
 export { default as OrderService } from "./order.service";
 export * from "./product";
+export { default as redisPubSubService } from "./redis-pub-sub.service";
 export { default as RedisService } from "./redis.service";
 export { default as ShopService } from "./shop.service";

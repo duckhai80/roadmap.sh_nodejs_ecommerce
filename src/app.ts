@@ -6,6 +6,8 @@ import helmet from "helmet";
 import createHttpError from "http-errors";
 import morgan from "morgan";
 import { ErrorResponse } from "./core";
+import inventoryServiceTest from "./tests/inventory-service.test";
+import productServiceTest from "./tests/product-service.test";
 
 const app = express();
 
@@ -38,5 +40,9 @@ app.use(
     });
   },
 );
+
+// Test pub/sub Redis
+productServiceTest.purchaseProduct("product:001", 10);
+inventoryServiceTest;
 
 export { app };
