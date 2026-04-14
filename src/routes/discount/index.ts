@@ -1,16 +1,12 @@
 import { discountController } from "@/controllers";
 import {
   catchAsync,
-  checkApiKey,
   checkAuthentication,
   checkPermission,
 } from "@/middlewares";
 import express from "express";
 
 const discountRouter = express.Router();
-
-// Check api key
-discountRouter.use(catchAsync(checkApiKey));
 
 discountRouter.post("/amount", catchAsync(discountController.getAmount));
 discountRouter.get(

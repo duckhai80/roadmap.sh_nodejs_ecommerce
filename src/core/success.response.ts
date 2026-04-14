@@ -1,4 +1,4 @@
-import { ReasonPhrase, StatusCode } from "@/constants";
+import { REASON_PHRASE, STATUS_CODE } from "@/constants";
 import { Response } from "express";
 
 export class SuccessResponse<T> {
@@ -8,8 +8,8 @@ export class SuccessResponse<T> {
 
   constructor({
     message,
-    status = StatusCode.OK,
-    reasonPhrase = ReasonPhrase.OK,
+    status = STATUS_CODE.OK,
+    reasonPhrase = REASON_PHRASE.OK,
     metadata,
   }: {
     message: string;
@@ -31,8 +31,8 @@ export class OK<T> extends SuccessResponse<T> {
   constructor({ message, metadata }: { message: string; metadata: T }) {
     super({
       message,
-      status: StatusCode.OK,
-      reasonPhrase: ReasonPhrase.OK,
+      status: STATUS_CODE.OK,
+      reasonPhrase: REASON_PHRASE.OK,
       metadata,
     });
   }
@@ -52,8 +52,8 @@ export class CREATED<T> extends SuccessResponse<T> {
   }) {
     super({
       message,
-      status: StatusCode.CREATED,
-      reasonPhrase: ReasonPhrase.CREATED,
+      status: STATUS_CODE.CREATED,
+      reasonPhrase: REASON_PHRASE.CREATED,
       metadata,
     });
 

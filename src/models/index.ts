@@ -1,8 +1,8 @@
-export { default as apiKeyModel } from "./apiKey.model";
+export { default as apiKeyModel } from "./api-key.model";
 export { default as cartModel } from "./cart.model";
 export { default as discountModel } from "./discount.model";
 export { default as inventoryModel } from "./inventory.model";
-export { default as keyStoreModel } from "./keyStore.model";
+export { default as keyStoreModel } from "./key-store.model";
 export { default as orderModel } from "./order.model";
 export * from "./product";
 export * from "./repositories";

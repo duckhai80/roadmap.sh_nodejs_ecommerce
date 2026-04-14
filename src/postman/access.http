@@ -25,7 +25,7 @@ x-api-key: {{$dotenv X_API_KEY}}
 ### Logout
 POST {{baseUrl}}/shop/logout
 Content-Type: application/json
-authoro
+Authorization: {{$dotenv AUTH_TOKEN}}
 x-api-key: {{$dotenv X_API_KEY}}
 x-client-id: {{$dotenv X_CLIENT_ID}}
 

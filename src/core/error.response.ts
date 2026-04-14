@@ -1,4 +1,4 @@
-import { ReasonPhrase, StatusCode } from "@/constants";
+import { REASON_PHRASE, STATUS_CODE } from "@/constants";
 
 export class ErrorResponse extends Error {
   status: number;
@@ -14,8 +14,8 @@ export class ErrorResponse extends Error {
 
 export class ConfigRequestError extends ErrorResponse {
   constructor(
-    message: string = ReasonPhrase.CONFLICT,
-    status: number = StatusCode.CONFLICT,
+    message: string = REASON_PHRASE.CONFLICT,
+    status: number = STATUS_CODE.CONFLICT,
   ) {
     super(message, status);
   }
@@ -23,8 +23,8 @@ export class ConfigRequestError extends ErrorResponse {
 
 export class BadRequestError extends ErrorResponse {
   constructor(
-    message: string = ReasonPhrase.BAD_REQUEST,
-    status: number = StatusCode.BAD_REQUEST,
+    message: string = REASON_PHRASE.BAD_REQUEST,
+    status: number = STATUS_CODE.BAD_REQUEST,
   ) {
     super(message, status);
   }
@@ -32,8 +32,8 @@ export class BadRequestError extends ErrorResponse {
 
 export class NotFoundError extends ErrorResponse {
   constructor(
-    message: string = ReasonPhrase.NOT_FOUND,
-    status: number = StatusCode.NOT_FOUND,
+    message: string = REASON_PHRASE.NOT_FOUND,
+    status: number = STATUS_CODE.NOT_FOUND,
   ) {
     super(message, status);
   }
@@ -41,8 +41,8 @@ export class NotFoundError extends ErrorResponse {
 
 export class AuthFailureError extends ErrorResponse {
   constructor(
-    message: string = ReasonPhrase.UNAUTHORIZED,
-    status: number = StatusCode.UNAUTHORIZED,
+    message: string = REASON_PHRASE.UNAUTHORIZED,
+    status: number = STATUS_CODE.UNAUTHORIZED,
   ) {
     super(message, status);
   }
@@ -50,8 +50,8 @@ export class AuthFailureError extends ErrorResponse {
 
 export class ForbiddenError extends ErrorResponse {
   constructor(
-    message: string = ReasonPhrase.FORBIDDEN,
-    status: number = StatusCode.FORBIDDEN,
+    message: string = REASON_PHRASE.FORBIDDEN,
+    status: number = STATUS_CODE.FORBIDDEN,
   ) {
     super(message, status);
   }

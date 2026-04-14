@@ -1,4 +1,4 @@
-const StatusCode = {
+const STATUS_CODE = {
   /**
    * Official Documentation @ https://tools.ietf.org/html/rfc7231#section-6.2.1
    *
@@ -343,4 +343,4 @@ const StatusCode = {
   NETWORK_AUTHENTICATION_REQUIRED: 511,
 };
 
-export default StatusCode;
+export default STATUS_CODE;

@@ -1,10 +1,10 @@
 export { default as AccessService } from "./access.service";
-export { default as ApiKeyService } from "./apiKey.service";
+export { default as ApiKeyService } from "./api-key.service";
 export { default as CartService } from "./cart.service";
 export { default as CheckoutService } from "./checkout.service";
 export { default as DiscountService } from "./discount.service";
 export { default as InventoryService } from "./inventory.service";
-export { default as KeyStoreService } from "./keyStore.service";
+export { default as KeyStoreService } from "./key-store.service";
 export { default as OrderService } from "./order.service";
 export * from "./product";
 export { default as RedisService } from "./redis.service";

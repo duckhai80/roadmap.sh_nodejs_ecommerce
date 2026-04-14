@@ -1,12 +1,12 @@
 import { AuthFailureError, BadRequestError, ForbiddenError } from "@/core";
 import { shopModel } from "@/models";
-import { KeyStore } from "@/models/keyStore.model";
+import { KeyStore } from "@/models/key-store.model";
 import { createTokenPair, getInfoData, JWTAuthPayload } from "@/utils";
 import bcrypt from "bcrypt";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import KeyStoreService from "./keyStore.service";
+import KeyStoreService from "./key-store.service";
 import ShopService from "./shop.service";
 
 const RoleShop = {

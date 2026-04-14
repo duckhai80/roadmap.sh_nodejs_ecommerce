@@ -3,7 +3,7 @@ import { AuthFailureError, NotFoundError } from "@/core";
 import { KeyStoreService } from "@/services";
 import { JWTAuthPayload, verifyToken } from "@/utils";
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "./catchAsync.middleware";
+import { catchAsync } from "./catch-async.middleware";
 
 export const checkAuthentication = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

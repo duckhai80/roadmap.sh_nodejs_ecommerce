@@ -1,3 +1,4 @@
+import { catchAsync, checkApiKey, pushLogDiscord } from "@/middlewares";
 import express from "express";
 import accessRouter from "./access";
 import cartRouter from "./cart";
@@ -7,6 +8,12 @@ import inventoryRouter from "./inventory";
 import productRouter from "./product";
 
 const router = express.Router();
+
+// Check api key
+router.use(catchAsync(checkApiKey));
+
+// Add log to discord
+router.use(pushLogDiscord);
 
 router.get("/", (req, res, next) => {
   return res.status(200).json({

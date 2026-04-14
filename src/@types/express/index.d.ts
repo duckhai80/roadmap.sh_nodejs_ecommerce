@@ -1,5 +1,5 @@
-import { ApiKey } from "@/models/apiKey.model";
-import { KeyStore } from "@/models/keyStore.model";
+import { ApiKey } from "@/models/api-key.model";
+import { KeyStore } from "@/models/key-store.model";
 import { JWTAuthPayload } from "@/utils";
 
 declare global {

@@ -1,16 +1,12 @@
 import { cartController } from "@/controllers";
 import {
   catchAsync,
-  checkApiKey,
   checkAuthentication,
   checkPermission,
 } from "@/middlewares";
 import express from "express";
 
 const cartRouter = express.Router();
-
-// Check api key
-cartRouter.use(catchAsync(checkApiKey));
 
 // Check authentication
 cartRouter.use(checkPermission("0000"));
