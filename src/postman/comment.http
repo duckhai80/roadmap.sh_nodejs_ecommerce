@@ -1,0 +1,25 @@
+@baseUrl=http://localhost:3056/v1/api/comments
+
+### Create comment
+POST {{baseUrl}}/
+Content-Type: application/json
+Authorization: {{$dotenv AUTH_TOKEN}}
+x-client-id: {{$dotenv X_CLIENT_ID}}
+x-api-key: {{$dotenv X_API_KEY}}
+
+{
+  "productId": "69d7b22815a9235e0ee4006c",
+  "userId": "12345",
+  "content": "Comment 2",
+  "parentId": null
+}
+
+### Get all comments by parent id
+GET {{baseUrl}}?productId=69d7b22815a9235e0ee4006c&parentId=69df533581076512870fc83f
+Content-Type: application/json
+Authorization: {{$dotenv AUTH_TOKEN}}
+x-client-id: {{$dotenv X_CLIENT_ID}}
+x-api-key: {{$dotenv X_API_KEY}}
+
+
+

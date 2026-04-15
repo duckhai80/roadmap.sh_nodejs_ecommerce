@@ -3,6 +3,7 @@ import express from "express";
 import accessRouter from "./access";
 import cartRouter from "./cart";
 import checkoutRouter from "./checkout";
+import commentRouter from "./comment";
 import discountRouter from "./discount";
 import inventoryRouter from "./inventory";
 import productRouter from "./product";
@@ -25,7 +26,8 @@ router.use("/v1/api/products", productRouter);
 router.use("/v1/api/discounts", discountRouter);
 router.use("/v1/api/carts", cartRouter);
 router.use("/v1/api/checkouts", checkoutRouter);
-router.use("/v1/api/inventory", inventoryRouter);
+router.use("/v1/api/inventories", inventoryRouter);
+router.use("/v1/api/comments", commentRouter);
 router.use("/v1/api", accessRouter);
 
 export default router;

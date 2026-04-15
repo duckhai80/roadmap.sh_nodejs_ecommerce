@@ -1,5 +1,6 @@
 export { default as apiKeyModel } from "./api-key.model";
 export { default as cartModel } from "./cart.model";
+export { default as commentModel } from "./comment.model";
 export { default as discountModel } from "./discount.model";
 export { default as inventoryModel } from "./inventory.model";
 export { default as keyStoreModel } from "./key-store.model";

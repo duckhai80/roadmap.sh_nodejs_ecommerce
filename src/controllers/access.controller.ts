@@ -1,5 +1,5 @@
 import { AuthFailureError, CREATED, OK } from "@/core";
-import { AccessService } from "@/services";
+import { accessService } from "@/services";
 import { Request, Response } from "express";
 
 class AccessController {
@@ -8,7 +8,7 @@ class AccessController {
   handleRefreshToken = async (req: Request, res: Response) => {
     return new OK({
       message: "Token refreshed successfully!",
-      metadata: await AccessService.handleRefreshToken(
+      metadata: await accessService.handleRefreshToken(
         req.keyStore!,
         req.shop,
         req.body.refreshToken,
@@ -19,14 +19,14 @@ class AccessController {
   login = async (req: Request, res: Response) => {
     return new OK({
       message: "Logged in successfully!",
-      metadata: await AccessService.login(req.body),
+      metadata: await accessService.login(req.body),
     }).send(res);
   };
 
   signup = async (req: Request, res: Response) => {
     return new CREATED({
       message: "Registered successfully!",
-      metadata: await AccessService.signup(req.body),
+      metadata: await accessService.signup(req.body),
     }).send(res);
   };
 
@@ -37,7 +37,7 @@ class AccessController {
 
     return new OK({
       message: "Logged out successfully!",
-      metadata: await AccessService.logout(req.keyStore!),
+      metadata: await accessService.logout(req.keyStore!),
     }).send(res);
   };
 }
