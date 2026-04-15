@@ -13,6 +13,14 @@ class CommentController {
     }).send(res);
   };
 
+  delete = async (req: Request, res: Response) => {
+    return new SuccessResponse({
+      message: "Comment deleted successfully",
+      status: 200,
+      metadata: await CommentService.delete(req.body),
+    }).send(res);
+  };
+
   findAllByParentId = async (req: Request, res: Response) => {
     return new SuccessResponse({
       message: "Comment created successfully",

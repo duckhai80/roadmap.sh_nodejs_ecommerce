@@ -21,5 +21,16 @@ Authorization: {{$dotenv AUTH_TOKEN}}
 x-client-id: {{$dotenv X_CLIENT_ID}}
 x-api-key: {{$dotenv X_API_KEY}}
 
+### Delete comments
+DELETE {{baseUrl}}/
+Content-Type: application/json
+Authorization: {{$dotenv AUTH_TOKEN}}
+x-client-id: {{$dotenv X_CLIENT_ID}}
+x-api-key: {{$dotenv X_API_KEY}}
+
+{
+  "productId": "69d7b22815a9235e0ee4006c",
+  "commentId": "69df535e81076512870fc846"
+}
 
 

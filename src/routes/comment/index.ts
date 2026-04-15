@@ -14,5 +14,6 @@ commentRouter.use(checkAuthentication);
 
 commentRouter.post("/", catchAsync(commentController.create));
 commentRouter.get("/", catchAsync(commentController.findAllByParentId));
+commentRouter.delete("/", catchAsync(commentController.delete));
 
 export default commentRouter;

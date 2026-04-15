@@ -1,3 +1,4 @@
+import { findOneProduct } from "./../models/repositories/product.repo";
 /* 
 - Add comments (shop/user)
 - Get comment list (shop/user)
@@ -76,6 +77,53 @@ class CommentService {
 
     await newComment.save();
     return newComment;
+  }
+
+  static async delete({
+    productId,
+    commentId,
+  }: {
+    productId: string;
+    commentId: string;
+  }) {
+    const foundProduct = await findOneProduct({ productId });
+
+    if (!foundProduct) throw new NotFoundError("Product not found");
+
+    const foundComment = await commentModel.findById(
+      convertToObjectId(commentId),
+    );
+
+    if (!foundComment) throw new NotFoundError("Comment not found");
+
+    // Calculate width to delete all child comments and update remain comments
+    const { left, right } = foundComment;
+    const width = right - left + 1;
+
+    // Remove all child comments
+    await commentModel.deleteMany({
+      productId: convertToObjectId(productId),
+      left: { $gte: left },
+      right: { $lte: right },
+    });
+
+    // Update all remain comments
+    await commentModel.updateMany(
+      {
+        productId: convertToObjectId(productId),
+        right: { $gt: right },
+      },
+      { $inc: { right: -width } },
+    );
+    await commentModel.updateMany(
+      {
+        productId: convertToObjectId(productId),
+        left: { $gt: right },
+      },
+      { $inc: { left: -width } },
+    );
+
+    return null;
   }
 
   static async findAllByParentId({
