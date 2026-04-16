@@ -4,6 +4,7 @@ export { default as commentModel } from "./comment.model";
 export { default as discountModel } from "./discount.model";
 export { default as inventoryModel } from "./inventory.model";
 export { default as keyStoreModel } from "./key-store.model";
+export { default as notificationModel } from "./notification.model";
 export { default as orderModel } from "./order.model";
 export * from "./product";
 export * from "./repositories";

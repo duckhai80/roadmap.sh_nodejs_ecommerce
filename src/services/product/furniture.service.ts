@@ -1,6 +1,6 @@
-import { ProductType } from "@/constants";
 import { BadRequestError } from "@/core";
 import { furnitureModel, updateProduct } from "@/models";
+import { ProductType } from "@/types";
 import { removeUndefinedNullObject, updateNestedObjectPatch } from "@/utils";
 import { ProductFactory, ProductService } from "./product.service";
 

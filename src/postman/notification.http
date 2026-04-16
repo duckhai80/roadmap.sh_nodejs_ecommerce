@@ -1,0 +1,7 @@
+@baseUrl=http://localhost:3056/v1/api/notifications
+
+### Get all notifications by user id
+GET {{baseUrl}}/
+Authorization: {{$dotenv AUTH_TOKEN}}
+x-client-id: {{$dotenv X_CLIENT_ID}}
+x-api-key: {{$dotenv X_API_KEY}}

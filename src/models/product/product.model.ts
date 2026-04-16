@@ -1,4 +1,4 @@
-import { ProductType } from "@/constants";
+import { ProductType } from "@/types";
 import mongoose, { InferSchemaType, Schema, Types } from "mongoose";
 import slugify from "slugify";
 
@@ -16,11 +16,7 @@ const productSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
-      enum: [
-        ProductType.ELECTRONICS,
-        ProductType.CLOTHING,
-        ProductType.FURNITURE,
-      ],
+      enum: ProductType,
     },
     shopId: { type: Schema.Types.ObjectId, ref: "Shop" },
     attributes: { type: Schema.Types.Mixed, required: true },

@@ -8,10 +8,10 @@ x-client-id: {{$dotenv X_CLIENT_ID}}
 x-api-key: {{$dotenv X_API_KEY}}
 
 {
-  "name": "New jeans shop 03",
-  "thumbnail": "high-quality thumb jeans",
+  "name": "New jeans shop for notification",
+  "thumbnail": "high-quality thumb jeans for notification",
   "description": "High quality thumb jeans",
-  "price": 500000,
+  "price": 1000000,
   "quantity": 10,
   "type": "Clothing",
   "attributes": {

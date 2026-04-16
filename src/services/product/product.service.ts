@@ -1,4 +1,3 @@
-import { ProductType } from "@/constants";
 import { BadRequestError } from "@/core";
 import {
   createInventory,
@@ -13,8 +12,10 @@ import {
   updateProduct,
 } from "@/models";
 import { Product } from "@/models/product/product.model";
+import { ProductType } from "@/types";
 import { convertToObjectId, updateNestedObjectPatch } from "@/utils";
 import { QueryFilter, Types } from "mongoose";
+import NotificationService from "../notification.service";
 
 interface ProductPayload {
   name: string;
@@ -70,6 +71,17 @@ export abstract class ProductService {
         location: this.attributes?.location,
       });
     }
+
+    // Push notification to system
+    await NotificationService.pushToSystem({
+      type: "SHOP_001",
+      senderId: this.shopId!.toString(),
+      receiverId: "1",
+      options: {
+        productName: this.name,
+        shopId: this.shopId,
+      },
+    });
 
     return newProduct;
   }

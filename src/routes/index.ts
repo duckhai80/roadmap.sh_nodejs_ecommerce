@@ -6,6 +6,7 @@ import checkoutRouter from "./checkout";
 import commentRouter from "./comment";
 import discountRouter from "./discount";
 import inventoryRouter from "./inventory";
+import notificationRouter from "./notification";
 import productRouter from "./product";
 
 const router = express.Router();
@@ -28,6 +29,7 @@ router.use("/v1/api/carts", cartRouter);
 router.use("/v1/api/checkouts", checkoutRouter);
 router.use("/v1/api/inventories", inventoryRouter);
 router.use("/v1/api/comments", commentRouter);
+router.use("/v1/api/notifications", notificationRouter);
 router.use("/v1/api", accessRouter);
 
 export default router;

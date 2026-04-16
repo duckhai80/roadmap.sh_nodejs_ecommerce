@@ -5,6 +5,7 @@ export { default as CommentService } from "./comment.service";
 export { default as DiscountService } from "./discount.service";
 export { default as InventoryService } from "./inventory.service";
 export { default as KeyStoreService } from "./key-store.service";
+export { default as NotificationService } from "./notification.service";
 export { default as OrderService } from "./order.service";
 export * from "./product";
 export { default as RedisService } from "./redis.service";
