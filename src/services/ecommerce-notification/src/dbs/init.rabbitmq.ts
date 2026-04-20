@@ -32,3 +32,24 @@ export const connectToRabbitMQForTest = async () => {
     throw error;
   }
 };
+
+export const consumeQueue = async (
+  channel: amqp.Channel,
+  queueName: string,
+) => {
+  try {
+    await channel.assertQueue(queueName, { durable: true });
+
+    channel.consume(
+      queueName,
+      (msg) => {
+        console.log(`Received message: ${msg?.content.toString()}`);
+      },
+      { noAck: true },
+    );
+  } catch (error) {
+    console.error(error);
+
+    throw error;
+  }
+};

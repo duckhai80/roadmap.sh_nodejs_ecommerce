@@ -14,8 +14,6 @@ const runProducer = async () => {
 
     // Send message to consumer channel
     channel.sendToQueue(queueName, Buffer.from(message));
-
-    console.log("Message sent: ", message);
   } catch (error) {
     console.error(error);
   }

@@ -1,11 +1,23 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    // File Layout
+    "rootDir": ".",
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    // Environment Settings
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
+    "target": "ESNext",
+    "types": ["jest", "node"],
     "esModuleInterop": true,
+    "lib": ["ESNext"],
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": ["jest", "node"]
-  }
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

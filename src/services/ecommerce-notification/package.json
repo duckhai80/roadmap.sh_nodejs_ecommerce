@@ -5,9 +5,11 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "src/server.ts",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "start": "tsx watch src/server.ts",
+    "build": "tsc && tsc-alias"
   },
   "dependencies": {
     "amqplib": "^1.0.3",
