@@ -1,8 +1,9 @@
+import amqp from "amqplib";
 import {
   connectToRabbitMQ,
   consumeExchange,
   consumeQueue,
-  produceExchange,
+  publishExchange,
 } from "../dbs/init.rabbitmq";
 
 class ConsumerService {
@@ -18,11 +19,27 @@ class ConsumerService {
     }
   }
 
-  static async publishExchange(exchangeName: string) {
+  static async publishExchange({
+    exchangeName,
+    exchangeType,
+    routingKey,
+    message,
+  }: {
+    exchangeName: string;
+    exchangeType: string;
+    routingKey: string;
+    message: string;
+  }) {
     try {
-      const { channel, connection } = await connectToRabbitMQ();
+      const { connection, channel } = await connectToRabbitMQ();
 
-      await produceExchange(channel, exchangeName);
+      await publishExchange({
+        channel,
+        exchangeName,
+        exchangeType,
+        routingKey,
+        message,
+      });
 
       setTimeout(() => {
         connection.close();
@@ -35,11 +52,27 @@ class ConsumerService {
     }
   }
 
-  static async consumeExchange(exchangeName: string) {
+  static async consumeExchange({
+    exchangeName,
+    exchangeType,
+    routingKey,
+    callback,
+  }: {
+    exchangeName: string;
+    exchangeType: string;
+    routingKey: string;
+    callback: (msg: amqp.Message | null) => void;
+  }) {
     try {
-      const { channel, connection } = await connectToRabbitMQ();
+      const { channel } = await connectToRabbitMQ();
 
-      await consumeExchange(channel, exchangeName);
+      await consumeExchange({
+        channel,
+        exchangeName,
+        exchangeType,
+        routingKey,
+        callback,
+      });
     } catch (error) {
       console.error(error);
 

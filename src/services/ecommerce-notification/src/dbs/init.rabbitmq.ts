@@ -1,7 +1,6 @@
 import amqp from "amqplib";
 
-const mockMessage = process.argv[2] || "Hello World";
-// const mockMessage = process.argv.slice(2).join(" ") || "Hello world";
+const mockMessage = process.argv.slice(2).join(" ") || "Hello world";
 
 export const connectToRabbitMQ = async () => {
   try {
@@ -42,7 +41,6 @@ export const consumeQueue = async (
 ) => {
   try {
     await channel.assertQueue(queueName, { durable: true });
-
     channel.consume(
       queueName,
       (msg) => {
@@ -57,14 +55,24 @@ export const consumeQueue = async (
   }
 };
 
-export const produceExchange = async (
-  channel: amqp.Channel,
-  exchangeName: string,
-  message: string = mockMessage,
-) => {
+export const publishExchange = async ({
+  channel,
+  exchangeName,
+  exchangeType,
+  routingKey = "#",
+  message,
+}: {
+  channel: amqp.Channel;
+  exchangeName: string;
+  exchangeType: string;
+  routingKey: string;
+  message: string;
+}) => {
   try {
-    await channel.assertExchange(exchangeName, "fanout", { durable: true });
-    await channel.publish(exchangeName, "", Buffer.from(message));
+    await channel.assertExchange(exchangeName, exchangeType, { durable: true });
+    await channel.publish(exchangeName, routingKey, Buffer.from(message), {
+      persistent: true,
+    });
   } catch (error) {
     console.error(error);
 
@@ -72,24 +80,28 @@ export const produceExchange = async (
   }
 };
 
-export const consumeExchange = async (channel: amqp.Channel, exchangeName) => {
+export const consumeExchange = async ({
+  channel,
+  exchangeName,
+  exchangeType,
+  routingKey = "#",
+  callback,
+}: {
+  channel: amqp.Channel;
+  exchangeName: string;
+  exchangeType: string;
+  routingKey: string;
+  callback: (msg: amqp.Message | null) => void;
+}) => {
   try {
-    await channel.assertExchange(exchangeName, "fanout", { durable: true });
+    await channel.assertExchange(exchangeName, exchangeType, { durable: true });
 
     const { queue } = await channel.assertQueue("", { exclusive: true });
 
-    console.log("🚀 ~ consumeExchange ~ queue:", queue);
+    console.log(`Queue::: ${queue}, Routing key::: ${routingKey}`);
 
-    await channel.bindQueue(queue, exchangeName, "");
-    await channel.consume(
-      queue,
-      (msg) => {
-        console.log(`Message: `, msg?.content.toString());
-      },
-      {
-        noAck: true,
-      },
-    );
+    await channel.bindQueue(queue, exchangeName, routingKey);
+    channel.consume(queue, (msg) => callback(msg), { noAck: true });
   } catch (error) {
     console.error(error);
 
