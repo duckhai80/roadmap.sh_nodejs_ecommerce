@@ -8,12 +8,10 @@ const runProducer = async () => {
     const channel = await connection.createChannel();
     const queueName = "test-topic";
 
-    await channel.assertQueue(queueName, {
-      durable: true,
-    });
+    await channel.assertQueue(queueName, { durable: true });
 
     // Send message to consumer channel
-    channel.sendToQueue(queueName, Buffer.from(message));
+    channel.sendToQueue(queueName, Buffer.from(message), { persistent: true });
   } catch (error) {
     console.error(error);
   }
