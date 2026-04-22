@@ -51,6 +51,7 @@ class ConsumerService {
       const { channel } = await connectToRabbitMQ();
       const queueName = "notificationQueue";
 
+      /* // Handle timeout error
       setTimeout(() => {
         channel.consume(
           queueName,
@@ -59,7 +60,21 @@ class ConsumerService {
           },
           { noAck: true },
         );
-      }, 15000);
+      }, 15000); */
+
+      // Handle logic error
+      channel.consume(queueName, (msg) => {
+        try {
+          const numberRandom = Math.random();
+
+          if (numberRandom < 0.8)
+            throw new Error("Message failed to process, please hot fix it");
+
+          console.log("Message received:", msg?.content.toString());
+        } catch (error) {
+          channel.nack(msg, false, false);
+        }
+      });
     } catch (error) {
       console.error(error);
 
