@@ -1,4 +1,4 @@
-import { connectToRabbitMQForTest } from "../dbs/init.rabbitmq";
+import { connectToRabbitMQForTest } from "../message-queues/init.rabbitmq";
 
 describe("RabbitMQ connection", () => {
   it("should connect successfully", async () => {
