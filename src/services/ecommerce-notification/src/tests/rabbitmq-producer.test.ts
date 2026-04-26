@@ -1,4 +1,4 @@
-import ConsumerService from "../services/rabbitmq-consumer.service";
+import ProducerService from "@/services/rabbitmq-producer.service";
 
 const exchangeName = "mail";
 const exchangeType = "topic";
@@ -11,7 +11,7 @@ const message = "Testing exchange topic type";
 //   })
 //   .catch((error) => console.error(error));
 
-ConsumerService.publishExchange({
+ProducerService.publishExchange({
   exchangeName,
   exchangeType,
   routingKey,

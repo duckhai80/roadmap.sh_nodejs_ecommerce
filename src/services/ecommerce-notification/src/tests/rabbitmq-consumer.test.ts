@@ -1,5 +1,5 @@
+import ConsumerService from "@/services/rabbitmq-consumer.service";
 import amqp from "amqplib";
-import ConsumerService from "../services/rabbitmq-consumer.service";
 
 const exchangeName = "mail";
 const exchangeType = "topic";
