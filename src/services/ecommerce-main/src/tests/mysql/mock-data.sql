@@ -1,24 +1,54 @@
 -- Create table
-create table test_table (
-  id int not null,
-  name varchar(50) default null,
-  age int default null,
-  address varchar(50) default null,
+CREATE TABLE test_table (
+  id INT NOT NULL,
+  name VARCHAR(50) DEFAULT NULL,
+  age INT DEFAULT NULL,
+  address VARCHAR(50) DEFAULT NULL,
 
-  primary key (id)
-) engine=InnoDB default charset=utf8mb4;
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Create procedure
-create definer=`duckhai80`@`%` procedure `insert_data`()
-begin
-  declare max_id int default 1000000;
-  declare i int default 1;
+CREATE DEFINER=`duckhai80`@`%` PROCEDURE `insert_data`()
+BEGIN
+  DECLARE max_id INT DEFAULT 1000000;
+  DECLARE i INT DEFAULT 1;
 
-  while i<=max_id do
-    insert into test_table (id, name, age, address)
-    values (i, concat('Name', i), i%100, concat('Address', i));
-    set i=i+1;
-  end while;  
-end
+  WHILE i <= max_id DO
+    INSERT INTO test_table (id, name, age, address)
+    VALUES (i, CONCAT('Name', i), i % 100, CONCAT('Address', i));
+    SET i = i + 1;
+  END WHILE;  
+END
 
-call insert_data();
+CALL insert_data();
+
+-- Create table and use partition
+CREATE TABLE orders (
+  id INT,
+  order_date DATE NOT NULL,
+  total_amount DECIMAL(10, 2),
+
+  PRIMARY KEY (id, order_date)
+)
+
+PARTITION BY RANGE COLUMNS (order_date) (
+  PARTITION p0 VALUES LESS THAN ('2022-01-01'),
+  PARTITION p1 VALUES LESS THAN ('2023-01-01'),
+  PARTITION p2 VALUES LESS THAN ('2024-01-01'),
+  PARTITION p3 VALUES LESS THAN ('2025-01-01'),
+  PARTITION p4 VALUES LESS THAN ('2026-01-01'),
+  PARTITION pmax VALUES LESS THAN (MAXVALUE)
+);
+
+EXPLAIN SELECT * FROM orders;
+
+INSERT INTO orders (id, order_date, total_amount) VALUES (1, '2021-06-07', 299.99);
+INSERT INTO orders (id, order_date, total_amount) VALUES (2, '2022-06-07', 399.99);
+INSERT INTO orders (id, order_date, total_amount) VALUES (3, '2023-06-07', 499.99);
+INSERT INTO orders (id, order_date, total_amount) VALUES (4, '2024-06-07', 599.99);
+INSERT INTO orders (id, order_date, total_amount) VALUES (5, '2024-06-07', 599.99);
+INSERT INTO orders (id, order_date, total_amount) VALUES (6, '2025-06-07', 599.99);
+INSERT INTO orders (id, order_date, total_amount) VALUES (7, '2026-06-07', 599.99);
+
+SELECT * FROM orders PARTITION (p2);

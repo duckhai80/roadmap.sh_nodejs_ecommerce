@@ -1,0 +1,5 @@
+CREATE EVENT create_table_auto_month
+ON SCHEDULE EVERY 1 MONTH
+STARTS '2026-04-27 20:10:00'
+ON COMPLETION PRESERVE ENABLE
+DO CALL create_table_auto_month();
