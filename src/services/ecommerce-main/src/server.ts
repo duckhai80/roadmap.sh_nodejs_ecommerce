@@ -1,9 +1,9 @@
 import { app } from "@/app";
-import { mongoDbInstance } from "@/database/init.mongodb.scalable";
-import { checkConnection, checkOverload } from "@/helpers";
+import envConfig from "@/configs/env.config";
 import redisClient from "@/configs/redis.config";
+import { mongoDbInstance } from "@/database/init.mongodb.scalable";
 
-const PORT = process.env.PORT || 3056;
+const PORT = envConfig.app.port || 3056;
 
 const server = app.listen(PORT, () => {
   console.log(`Web server is running on port ${PORT}`);

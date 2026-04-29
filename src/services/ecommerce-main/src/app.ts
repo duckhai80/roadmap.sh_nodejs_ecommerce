@@ -1,6 +1,6 @@
+import "@/configs/env.config";
 import router from "@/routes";
 import compression from "compression";
-import dotenv from "dotenv";
 import express, { NextFunction, Request, Response } from "express";
 import helmet from "helmet";
 import createHttpError from "http-errors";
@@ -10,8 +10,6 @@ import inventoryServiceTest from "./tests/inventory-service.test";
 import productServiceTest from "./tests/product-service.test";
 
 const app = express();
-
-dotenv.config();
 
 // Init middleware
 app.use(express.json());

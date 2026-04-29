@@ -10,6 +10,7 @@ export { default as OrderService } from "./order.service";
 export * from "./product";
 export { default as RedisService } from "./redis.service";
 export { default as ShopService } from "./shop.service";
+export { default as UploadService } from "./upload.service";
 
 export { default as accessService } from "./access.service";
 export { default as redisPubSubService } from "./redis-pub-sub.service";

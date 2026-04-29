@@ -1,22 +1,24 @@
+import envConfig from "./env.config";
+
 const dev = {
   app: {
-    port: process.env.DEV_APP_PORT || 3052,
+    port: envConfig.app.port || 3052,
   },
   db: {
-    host: process.env.DEV_DB_HOST || "localhost",
-    port: process.env.DEV_DB_PORT || 27017,
-    name: process.env.DEV_DB_NAME || "shopDEV",
+    host: envConfig.db.host || "localhost",
+    port: envConfig.db.port || 27017,
+    name: envConfig.db.name || "shopDEV",
   },
 };
 
 const prod = {
   app: {
-    port: process.env.PROD_APP_PORT || 3052,
+    port: envConfig.app.port || 3052,
   },
   db: {
-    host: process.env.PROD_DB_HOST || "localhost",
-    port: process.env.PROD_DB_PORT || 27017,
-    name: process.env.PROD_DB_NAME || "shopPROD",
+    host: envConfig.app.port || "localhost",
+    port: envConfig.app.port || 27017,
+    name: envConfig.app.port || "shopPROD",
   },
 };
 

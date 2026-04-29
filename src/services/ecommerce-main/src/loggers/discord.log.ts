@@ -1,6 +1,5 @@
+import envConfig from "@/configs/env.config";
 import { Client, GatewayIntentBits } from "discord.js";
-
-const TOKEN = process.env.DISCORD_BOT_TOKEN;
 
 const client = new Client({
   intents: [
@@ -11,7 +10,7 @@ const client = new Client({
   ],
 });
 
-client.login(TOKEN);
+client.login(envConfig.discord.botToken);
 client.on("clientReady", () => {
   console.log(`Logged in as ${client.user?.tag}`);
 });

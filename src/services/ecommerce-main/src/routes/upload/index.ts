@@ -1,0 +1,28 @@
+import { uploadDisk } from "@/configs/multer.config";
+import { uploadController } from "@/controllers";
+import {
+  catchAsync,
+  checkAuthentication,
+  checkPermission,
+} from "@/middlewares";
+import express from "express";
+
+const uploadRouter = express.Router();
+
+// Check authentication
+uploadRouter.use(checkPermission("0000"));
+uploadRouter.use(checkAuthentication);
+
+uploadRouter.post("/image-url", catchAsync(uploadController.uploadImageUrl));
+uploadRouter.post(
+  "/image",
+  uploadDisk.single("thumb"),
+  catchAsync(uploadController.uploadImage),
+);
+uploadRouter.post(
+  "/images",
+  uploadDisk.array("thumbs", 3),
+  catchAsync(uploadController.uploadImages),
+);
+
+export default uploadRouter;

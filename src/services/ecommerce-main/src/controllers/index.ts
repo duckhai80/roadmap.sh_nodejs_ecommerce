@@ -6,3 +6,4 @@ export { default as discountController } from "./discount.controller";
 export { default as inventoryController } from "./inventory.controller";
 export { default as notificationController } from "./notification.controller";
 export { default as productController } from "./product.controller";
+export { default as uploadController } from "./upload.controller";

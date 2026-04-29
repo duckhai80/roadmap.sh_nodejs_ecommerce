@@ -8,18 +8,6 @@ const pool = mysql.createPool({
   database: "ecommerce_dev",
 });
 
-// pool.query("SELECT 1 + 1 AS solution", (error, result) => {
-//   if (error) throw error;
-
-//   console.log("Query results:", result);
-
-//   pool.end((error) => {
-//     if (error) throw error;
-
-//     console.log(`Connection closed`);
-//   });
-// });
-
 const batchSize = 100_000;
 const totalSize = 10_000_000;
 let currentId = 1;

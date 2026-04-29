@@ -1,13 +1,13 @@
+import envConfig from "@/configs/env.config";
 import {
   BaseMessageOptions,
   Client,
   GatewayIntentBits,
   TextChannel,
 } from "discord.js";
-import "dotenv/config";
 
-const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-const DISCORD_CHANNEL_ID = process.env.DISCORD_CHANNEL_ID;
+const DISCORD_BOT_TOKEN = envConfig.discord.botToken;
+const DISCORD_CHANNEL_ID = envConfig.discord.channelId;
 
 class DiscordLoggerService {
   private client: Client;
