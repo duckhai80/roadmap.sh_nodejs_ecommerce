@@ -1,0 +1,64 @@
+@baseUrl=http://localhost:3056/v1/api/rbac
+
+### Create resource
+POST {{baseUrl}}/resources
+Content-Type: application/json
+x-api-key: {{$dotenv X_API_KEY}}
+
+{
+  "name": "balance",
+  "slug": "p000002",
+  "description": "Balance global"
+}
+
+### Find all resources
+GET {{baseUrl}}/resources
+x-api-key: {{$dotenv X_API_KEY}}
+
+### Create role
+POST {{baseUrl}}/roles
+Content-Type: application/json
+x-api-key: {{$dotenv X_API_KEY}}
+
+{
+  "name": "shop",
+  "slug": "ro00001",
+  "description": "Shop extend from admin",
+  "force": true,
+  "grants": [
+    {
+      "resourceId": "6a7ffeb83513716dd22dffc9",
+      "actions": ["update:own", "read:own"],
+      "attributes": "*"
+    },
+    {
+      "resourceId": "6a7fff1f7675c821406b8839",
+      "actions": ["update:any", "read:any", "delete:any"],
+      "attributes": "*"
+    }
+  ]
+}
+
+# {
+#   "name": "admin",
+#   "slug": "ro00001",
+#   "description": "Admin extend from shop or user",
+#   "force": true,
+#   "grants": [
+#     {
+#       "resourceId": "6a7ffeb83513716dd22dffc9",
+#       "actions": ["update:any", "read:any", "delete:any"],
+#       "attributes": "*"
+#     },
+#     {
+#       "resourceId": "6a7fff1f7675c821406b8839",
+#       "actions": ["update:any", "read:any", "delete:any"],
+#       "attributes": "*, !amount"
+#     }
+#   ]
+# }
+
+### Find all roles
+GET {{baseUrl}}/roles
+x-api-key: {{$dotenv X_API_KEY}}
+

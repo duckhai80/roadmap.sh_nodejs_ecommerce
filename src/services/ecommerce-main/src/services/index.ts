@@ -8,6 +8,7 @@ export { default as KeyStoreService } from "./key-store.service";
 export { default as NotificationService } from "./notification.service";
 export { default as OrderService } from "./order.service";
 export * from "./product";
+export { default as RbacService } from "./rbac.service";
 export { default as RedisService } from "./redis.service";
 export { default as ShopService } from "./shop.service";
 export { default as UploadService } from "./upload.service";

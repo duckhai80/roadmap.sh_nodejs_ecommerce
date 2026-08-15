@@ -8,4 +8,6 @@ export { default as notificationModel } from "./notification.model";
 export { default as orderModel } from "./order.model";
 export * from "./product";
 export * from "./repositories";
+export { default as resourceModel } from "./resource.model";
 export { default as shopModel } from "./shop.model";
+export { default as userModel } from "./user.model";

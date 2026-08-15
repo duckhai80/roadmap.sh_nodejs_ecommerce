@@ -3,3 +3,4 @@ export * from "./checkout.type";
 export * from "./order.type";
 export * from "./product.type";
 export * from "./query.type";
+export * from "./role.type";

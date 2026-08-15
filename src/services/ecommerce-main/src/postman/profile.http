@@ -1,0 +1,13 @@
+@baseUrl=http://localhost:3056/v1/api/profiles
+
+### Get profiles
+GET {{baseUrl}}/view-any?role=admin
+# x-client-id: {{$dotenv X_CLIENT_ID}}
+# Authorization: {{$dotenv AUTH_TOKEN}}
+x-api-key: {{$dotenv X_API_KEY}}
+
+### Get profiles
+GET {{baseUrl}}/view-own?role=user&id=2
+# x-client-id: {{$dotenv X_CLIENT_ID}}
+# Authorization: {{$dotenv AUTH_TOKEN}}
+x-api-key: {{$dotenv X_API_KEY}}
