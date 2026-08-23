@@ -8,6 +8,7 @@ declare global {
       apiKeyObject?: ApiKey;
       keyStore?: KeyStore;
       shop: JWTAuthPayload;
+      requestId: string;
     }
   }
 }

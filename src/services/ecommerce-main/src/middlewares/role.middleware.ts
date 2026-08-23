@@ -37,4 +37,4 @@ let grantList = [
   },
 ];
 
-export const accessControllerMiddleware = new AccessControl(grantList);
+export const accessControllerMiddleware = new AccessControl();

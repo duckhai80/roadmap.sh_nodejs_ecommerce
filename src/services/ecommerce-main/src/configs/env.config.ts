@@ -50,6 +50,9 @@ const envConfig = {
     cloudfrontPrivateKey: process.env.AWS_CLOUDFRONT_PRIVATE_KEY || "",
     cloudfrontKeyPairId: process.env.AWS_CLOUDFRONT_PUBLIC_KEY_ID || "",
   },
+  winston: {
+    logLevel: process.env.WINSTON_LOG_LEVEL,
+  },
 };
 
 export default envConfig;

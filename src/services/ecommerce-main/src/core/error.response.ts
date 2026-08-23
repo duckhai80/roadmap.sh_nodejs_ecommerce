@@ -1,12 +1,15 @@
 import { REASON_PHRASE, STATUS_CODE } from "@/constants";
+import { winstonLogger, customLogger } from "@/loggers";
 
 export class ErrorResponse extends Error {
   status: number;
+  now: number;
 
   constructor(message: string, status: number) {
     super(message);
 
     this.status = status;
+    this.now = Date.now();
 
     Object.setPrototypeOf(this, ErrorResponse.prototype);
   }

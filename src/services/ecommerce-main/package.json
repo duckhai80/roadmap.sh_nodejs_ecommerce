@@ -36,7 +36,10 @@
     "mysql2": "^3.22.2",
     "redis": "^5.11.0",
     "slugify": "^1.6.8",
-    "tsc-alias": "^1.8.16"
+    "tsc-alias": "^1.8.16",
+    "uuid": "^14.0.2",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.8",

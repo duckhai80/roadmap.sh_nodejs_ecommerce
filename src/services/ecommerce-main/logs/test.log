@@ -1,0 +1,7 @@
+error: 404 - Not found key token
+error: 400 - Shop not registered!
+error: 404 - Not found key token
+{"level":"error","message":"400 - Shop not registered!","timestamp":"2026-08-16T07:01:48.947Z"}
+[2026-08-16 02:04:51.919 PM] error: 400 - Shop not registered!
+[2026-08-16 02:07:05.260 PM] error: 	400 - Shop not registered!
+[2026-08-16 02:20:03.389 PM] error: 	400 - Shop not registered!
